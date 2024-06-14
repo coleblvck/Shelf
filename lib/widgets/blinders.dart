@@ -73,47 +73,50 @@ class BlinderItem extends StatelessWidget {
               .secondary
               .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
           child: Padding(
-              padding: EdgeInsets.all(12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
-                  Expanded(
-                      flex: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Text(
-                          appInfo.name,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: ShelfTheme.of(context).colors.onSecondary),
-                        ),
-                      )),
-                  GestureDetector(
-                    onTap: () {
-                      InstalledApps.openSettings(appInfo.packageName);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        RemixIcon.information,
-                        size: 28,
-                      ),
+            padding: EdgeInsets.all(12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    InstalledApps.openSettings(appInfo.packageName);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Icon(
+                      RemixIcon.information,
+                      size: 28,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      InstalledApps.uninstallApp(appInfo.packageName);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        RemixIcon.delete_bin_7,
-                        size: 28,
-                      ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    InstalledApps.uninstallApp(appInfo.packageName);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Icon(
+                      RemixIcon.delete_bin_7,
+                      size: 28,
                     ),
                   ),
-                ],
-              )),
+                ),
+                Expanded(
+                  flex: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text(
+                      appInfo.name,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color: ShelfTheme.of(context).colors.onSecondary),
+                    ),
+                  ),
+                ),
+                Image.memory(appInfo.icon!),
+              ],
+            ),
+          ),
         ),
       ],
     );

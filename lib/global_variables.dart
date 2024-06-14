@@ -26,19 +26,19 @@ StreamController<List<AppInfo>> allAppsListStream =
 
 List<AppInfo> allAppsList = [];
 
-Map<String, Map<String, dynamic>> actionButtonActions = {
-  "visualizer": {
-    "widget": MiniMusicVisualizer(
-      animate: true,
-      radius: 5,
-      height: 20,
-      width: 10,
-      color: Colors.purple.withBlue(10),
-    ),
-    "function": () {
-      if (allAppsList.map((e) => e.packageName).toList().contains(fabApp)) {
-        InstalledApps.startApp(fabApp);
+Map<String, Map<String, dynamic>> actionButtonActions(context) => {
+      "visualizer": {
+        "widget": MiniMusicVisualizer(
+          animate: true,
+          radius: 5,
+          height: 20,
+          width: 10,
+          color: ShelfTheme.of(context).colors.secondary,
+        ),
+        "function": () {
+          if (allAppsList.map((e) => e.packageName).toList().contains(fabApp)) {
+            InstalledApps.startApp(fabApp);
+          }
+        },
       }
-    },
-  }
-};
+    };

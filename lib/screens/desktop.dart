@@ -3,6 +3,7 @@ import 'package:remix_icon_icons/remix_icon_icons.dart';
 import 'package:shelf/global_functions.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
+import 'package:shelf/utilities/shelf_utils.dart';
 import 'package:shelf/widgets/app_list.dart';
 import 'package:shelf/widgets/fab.dart';
 
@@ -84,6 +85,18 @@ class _DesktopState extends State<Desktop> {
             ),
             GestureDetector(
               onTap: () {
+                refreshShelf();
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  RemixIcon.refresh_outline,
+                  size: 30,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
                 setState(() {
                   searchController.clear();
                   search("");
@@ -111,7 +124,7 @@ class _DesktopState extends State<Desktop> {
                         size: 30,
                       )
                     : const Icon(
-                        RemixIcon.menu_3,
+                        RemixIcon.menu_4,
                         size: 30,
                       ),
               ),
