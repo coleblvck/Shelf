@@ -5,8 +5,9 @@ import 'package:shelf/screens/desktop.dart';
 import 'package:shelf/ui/theming.dart';
 import 'package:shelf/utilities/shelf_utils.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initColorScheme();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   //Move to desktop build?
   initAppList();
@@ -19,34 +20,24 @@ class Shelf extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(
-        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      ShelfColorScheme? dynamicScheme;
-      darkDynamic != null
-          ? dynamicScheme = ShelfColorScheme(
-              primary: darkDynamic.primary,
-              onPrimary: darkDynamic.onPrimary,
-              secondary: darkDynamic.tertiary,
-              onSecondary: darkDynamic.onTertiary,
-              surface: darkDynamic.surface,
-              onSurface: darkDynamic.onSurface,
-              brightness: Brightness.dark,
-              colorSchemeType: ColorSchemeType.dynamic,
-            )
-          : null;
-      return ShelfTheme(
-        colors: dynamicScheme ?? defaultColors,
-        uiParameters: defaultUIParameters,
-        child: MaterialApp(
-          title: 'Shelf',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          debugShowCheckedModeBanner: false,
-          home: const Desktop(),
-        ),
+      return StreamBuilder<ShelfColorScheme>(
+        stream: colorSchemeStream.stream,
+        builder: (context, snapshot) {
+          return ShelfTheme(
+            colors: snapshot.data ?? currentColorScheme!,
+            uiParameters: defaultUIParameters,
+            child: MaterialApp(
+              title: 'Shelf',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              debugShowCheckedModeBanner: false,
+              home: const Desktop(),
+            ),
+          );
+        }
       );
-    });
+
   }
 }

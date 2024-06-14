@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 class ShelfColorScheme {
@@ -73,4 +76,40 @@ class ShelfTheme extends InheritedWidget {
   bool updateShouldNotify(ShelfTheme oldWidget) {
     return oldWidget.colors != colors;
   }
+}
+
+ShelfColorScheme? currentColorScheme;
+
+StreamController<ShelfColorScheme> colorSchemeStream =
+    StreamController.broadcast();
+
+getColorScheme() async {
+  final corePalette = await DynamicColorPlugin.getCorePalette();
+  if (corePalette != null) {
+    ColorScheme dynamicColors =
+        corePalette.toColorScheme(brightness: Brightness.dark);
+    ShelfColorScheme dynamicColorScheme = ShelfColorScheme(
+      primary: dynamicColors.primary,
+      onPrimary: dynamicColors.onPrimary,
+      secondary: dynamicColors.tertiary,
+      onSecondary: dynamicColors.onTertiary,
+      surface: dynamicColors.surface,
+      onSurface: dynamicColors.onSurface,
+      brightness: Brightness.dark,
+      colorSchemeType: ColorSchemeType.dynamic,
+    );
+    colorSchemeStream.add(dynamicColorScheme);
+    currentColorScheme = dynamicColorScheme;
+  } else {
+    colorSchemeStream.add(defaultColors);
+    currentColorScheme = defaultColors;
+  }
+}
+
+initColorScheme() async {
+  await getColorScheme();
+}
+
+refreshColorScheme() async {
+  await getColorScheme();
 }
