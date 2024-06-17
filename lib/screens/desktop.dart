@@ -39,8 +39,8 @@ class _DesktopState extends State<Desktop> {
                 ? Column(
                     children: [
                       desktopBox1(),
-                      searchCard(),
                       desktopBox2(),
+                      utilCard(),
                     ],
                   )
                 : Row(
@@ -54,6 +54,74 @@ class _DesktopState extends State<Desktop> {
         floatingActionButton: fabEnabled ? fab(context) : null,
       ),
     );
+  }
+
+  Card utilCard() {
+    return Card(
+        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+        color: ShelfTheme.of(context)
+            .colors
+            .primary
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                RemixIcon.search,
+                size: 30,
+              ),
+              Expanded(
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (term) => setState(() {
+                    search(term);
+                  }),
+                  decoration: const InputDecoration(border: InputBorder.none),
+                ),
+              ),
+              GestureDetector(
+                onTap: widgetsWithActions(
+                    context)[currentActionWidgetAction]!["function"],
+                child: widgetsWithActions(
+                    context)[currentActionWidgetAction]!["widget"],
+              ),
+              GestureDetector(
+                onTap: () {
+                  refreshShelf();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(
+                    RemixIcon.refresh_outline,
+                    color: ShelfTheme.of(context).colors.onPrimary,
+                    size: 30,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    toggleMenu();
+                  });
+                },
+                child: menuShown
+                    ? Icon(
+                        RemixIcon.home_7_outline,
+                        color: ShelfTheme.of(context).colors.onPrimary,
+                        size: 30,
+                      )
+                    : Icon(
+                        RemixIcon.menu_4,
+                        color: ShelfTheme.of(context).colors.onPrimary,
+                        size: 30,
+                      ),
+              ),
+            ],
+          ),
+        ));
   }
 
   Card searchCard() {
@@ -94,6 +162,10 @@ class _DesktopState extends State<Desktop> {
                   size: 30,
                 ),
               ),
+            ),
+            GestureDetector(
+              child: widgetsWithActions(
+                  context)[currentActionWidgetAction]!["widget"],
             ),
             GestureDetector(
               onTap: () {
@@ -147,7 +219,7 @@ class _DesktopState extends State<Desktop> {
           ? desktopBox2Child
           : Column(
               children: [
-                searchCard(),
+                utilCard(),
                 Expanded(
                   child: desktopBox2Child,
                 ),

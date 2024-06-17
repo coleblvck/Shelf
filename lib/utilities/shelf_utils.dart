@@ -26,11 +26,9 @@ initAppList() async {
 }
 
 appsLayout(List<AppInfo> allApps) {
-  if (layout == "Blinders") {
-    return Blinders(allApps: allApps);
-  }
-  if (layout == "Boxes") {
-    return Boxes(allApps: allApps);
+  switch (layout) {
+    case "Blinds": return Blinds(allApps: allApps);
+    case "Boxes": return Boxes(allApps: allApps);
   }
 }
 

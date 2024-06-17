@@ -4,8 +4,8 @@ import 'package:installed_apps/app_info.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
 import 'package:shelf/ui/theming.dart';
 
-class Blinders extends StatelessWidget {
-  const Blinders({
+class Blinds extends StatelessWidget {
+  const Blinds({
     super.key,
     required this.allApps,
   });
@@ -19,14 +19,14 @@ class Blinders extends StatelessWidget {
       itemCount: allApps.length,
       itemExtent: 60,
       itemBuilder: (context, index) {
-        return BlinderItem(appInfo: allApps[index]);
+        return BlindItem(appInfo: allApps[index]);
       },
     );
   }
 }
 
-class BlinderItem extends StatelessWidget {
-  const BlinderItem({super.key, required this.appInfo});
+class BlindItem extends StatelessWidget {
+  const BlindItem({super.key, required this.appInfo});
   final AppInfo appInfo;
 
   @override

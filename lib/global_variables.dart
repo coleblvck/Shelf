@@ -13,10 +13,10 @@ import 'package:shelf/widgets/peek_box.dart';
 
 Widget desktopBox1Child = const PeekBox();
 Widget desktopBox2Child = Container(); //const AppListBuilder();
-bool fabEnabled = true;
+bool fabEnabled = false;
 String greetingText = "Hola";
 String fabApp = "com.coleblvck.antiiq";
-String layout = "Blinders";
+String layout = "Blinds";
 bool menuShowsListOnHome = true;
 bool menuShown = false;
 TextEditingController searchController = TextEditingController();
@@ -26,14 +26,16 @@ StreamController<List<AppInfo>> allAppsListStream =
 
 List<AppInfo> allAppsList = [];
 
-Map<String, Map<String, dynamic>> actionButtonActions(context) => {
+String currentActionWidgetAction = "visualizer";
+
+Map<String, Map<String, dynamic>> widgetsWithActions(context) => {
       "visualizer": {
         "widget": MiniMusicVisualizer(
           animate: true,
-          radius: 5,
-          height: 20,
+          radius: 2,
+          height: 24,
           width: 10,
-          color: ShelfTheme.of(context).colors.secondary,
+          color: ShelfTheme.of(context).colors.onPrimary,
         ),
         "function": () {
           if (allAppsList.map((e) => e.packageName).toList().contains(fabApp)) {
