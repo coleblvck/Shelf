@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
 import 'package:shelf/global_functions.dart';
@@ -20,13 +22,9 @@ class _DesktopState extends State<Desktop> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) => {
-        if (menuShown)
+        if (secondBoxIndex != 1)
           {
-            setState(
-              () {
-                toggleMenu();
-              },
-            )
+            secondBoxController.jumpToPage(1),
           }
       },
       child: Scaffold(
@@ -34,19 +32,19 @@ class _DesktopState extends State<Desktop> {
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: MediaQuery.of(context).orientation == Orientation.portrait
                 ? Column(
                     children: [
-                      desktopBox1(),
-                      desktopBox2(),
+                      desktopFirstBox(),
+                      desktopSecondBox(),
                       utilCard(),
                     ],
                   )
                 : Row(
                     children: [
-                      desktopBox1(),
-                      desktopBox2(landscapeOT: true),
+                      desktopFirstBox(),
+                      desktopSecondBox(landscapeOT: true),
                     ],
                   ),
           ),
@@ -56,72 +54,79 @@ class _DesktopState extends State<Desktop> {
     );
   }
 
-  Card utilCard() {
-    return Card(
-        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-        color: ShelfTheme.of(context)
-            .colors
-            .primary
-            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(
-                RemixIcon.search,
-                size: 30,
-              ),
-              Expanded(
-                child: TextField(
-                  controller: searchController,
-                  onChanged: (term) => setState(() {
-                    search(term);
-                  }),
-                  decoration: const InputDecoration(border: InputBorder.none),
-                ),
-              ),
-              GestureDetector(
-                onTap: widgetsWithActions(
-                    context)[currentActionWidgetAction]!["function"],
-                child: widgetsWithActions(
-                    context)[currentActionWidgetAction]!["widget"],
-              ),
-              GestureDetector(
-                onTap: () {
-                  refreshShelf();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Icon(
-                    RemixIcon.refresh_outline,
-                    color: ShelfTheme.of(context).colors.onPrimary,
-                    size: 30,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    toggleMenu();
-                  });
-                },
-                child: menuShown
-                    ? Icon(
-                        RemixIcon.home_7_outline,
-                        color: ShelfTheme.of(context).colors.onPrimary,
-                        size: 30,
-                      )
-                    : Icon(
-                        RemixIcon.menu_4,
-                        color: ShelfTheme.of(context).colors.onPrimary,
+  Padding utilCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Card(
+          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+          color: ShelfTheme.of(context)
+              .colors
+              .primary
+              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        RemixIcon.search,
                         size: 30,
                       ),
-              ),
-            ],
-          ),
-        ));
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    launchApp(fabApp);
+                  },
+                  child: widgetsWithActions(
+                      context)[currentActionWidgetAction]!["widget"],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    refreshShelf();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(
+                      RemixIcon.restart_outline,
+                      color: ShelfTheme.of(context).colors.onPrimary,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                StreamBuilder<int>(
+                    stream: secondBoxIndexStream.stream,
+                    builder: (context, snapshot) {
+                      final int appDrawerIndex =
+                          snapshot.data ?? secondBoxIndex;
+                      return GestureDetector(
+                        onTap: () {
+                          toggleMenu();
+                        },
+                        child: appDrawerIndex != 1
+                            ? Icon(
+                                RemixIcon.dashboard,
+                                color: ShelfTheme.of(context).colors.onPrimary,
+                                size: 30,
+                              )
+                            : Icon(
+                                RemixIcon.apps_2,
+                                color: ShelfTheme.of(context).colors.onPrimary,
+                                size: 30,
+                              ),
+                      );
+                    }),
+              ],
+            ),
+          )),
+    );
   }
 
   Card searchCard() {
@@ -205,26 +210,52 @@ class _DesktopState extends State<Desktop> {
         ));
   }
 
-  Expanded desktopBox1() {
+  Expanded desktopFirstBox() {
     return Expanded(
       flex: 2,
       child: desktopBox1Child,
     );
   }
 
-  Expanded desktopBox2({bool landscapeOT = false}) {
+  Expanded desktopSecondBox({bool landscapeOT = false}) {
     return Expanded(
       flex: 4,
       child: !landscapeOT
-          ? desktopBox2Child
+          ? PageView(
+              controller: secondBoxController,
+              onPageChanged: (index) {
+                secondBoxIndexStream.add(index);
+                secondBoxIndex = index;
+              },
+              children: [
+                const AppListBuilder(),
+                Container(),
+              ],
+            )
           : Column(
               children: [
-                utilCard(),
                 Expanded(
-                  child: desktopBox2Child,
+                  child: PageView(
+                    controller: secondBoxController,
+                    onPageChanged: (index) {
+                      secondBoxIndexStream.add(index);
+                      secondBoxIndex = index;
+                    },
+                    children: [
+                      const AppListBuilder(),
+                      Container(),
+                    ],
+                  ),
                 ),
+                utilCard(),
               ],
             ),
     );
   }
 }
+
+PageController secondBoxController = PageController(initialPage: 1);
+
+int secondBoxIndex = 1;
+
+StreamController<int> secondBoxIndexStream = StreamController.broadcast();

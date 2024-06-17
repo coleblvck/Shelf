@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
-
+import 'package:shelf/ui/theming.dart';
 
 class Boxes extends StatelessWidget {
   const Boxes({
@@ -13,55 +13,55 @@ class Boxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      physics: const BouncingScrollPhysics(),
-      itemCount: allApps.length,
-      itemBuilder: (context, index) {
-        return GridItem(appInfo: allApps[index]);
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GridView.builder(
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+        physics: const BouncingScrollPhysics(),
+        itemCount: allApps.length,
+        itemBuilder: (context, index) {
+          return GridItem(appInfo: allApps[index]);
+        },
+      ),
     );
   }
 }
 
-
 class GridItem extends StatelessWidget {
-  const GridItem({
-    super.key,
-    required this.appInfo
-  });
+  const GridItem({super.key, required this.appInfo});
   final AppInfo appInfo;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onDoubleTap: (){InstalledApps.startApp(appInfo.packageName);},
+      onTap: () {
+        InstalledApps.startApp(appInfo.packageName);
+      },
       child: Card(
         elevation: 5,
-        color: Colors.black.withAlpha(450),
+        color: ShelfTheme.of(context)
+            .colors
+            .surface
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
         child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
+            padding: EdgeInsets.all(8),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                    flex: 1,
-                    child: Image.memory(appInfo.icon!)
-                ),
-                Expanded(
-                    flex: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(appInfo.name,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.amber),
-                      ),
-                    )
+                Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    appInfo.name,
+                    textAlign: TextAlign.left,
+                    maxLines: 1,
+                    style:
+                        TextStyle(color: ShelfTheme.of(context).colors.primary),
+                  ),
                 ),
               ],
-            )
-        ),
-
+            )),
       ),
     );
   }

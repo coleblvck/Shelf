@@ -39,6 +39,7 @@ dependencies:
   remix_icon_icons: ^1.0.1
   mini_music_visualizer: ^1.1.4
   dynamic_color: ^1.7.0
+  flutter_flip_card: ^0.0.6
 
 dev_dependencies:
   flutter_test:

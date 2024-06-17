@@ -7,7 +7,7 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:shelf/ui/theming.dart';
 import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/blinders.dart';
+import 'package:shelf/widgets/Blinds.dart';
 import 'package:shelf/widgets/boxes.dart';
 import 'package:shelf/widgets/peek_box.dart';
 
@@ -32,15 +32,10 @@ Map<String, Map<String, dynamic>> widgetsWithActions(context) => {
       "visualizer": {
         "widget": MiniMusicVisualizer(
           animate: true,
-          radius: 2,
+          radius: 4,
           height: 24,
           width: 10,
           color: ShelfTheme.of(context).colors.onPrimary,
         ),
-        "function": () {
-          if (allAppsList.map((e) => e.packageName).toList().contains(fabApp)) {
-            InstalledApps.startApp(fabApp);
-          }
-        },
       }
     };

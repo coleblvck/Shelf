@@ -3,7 +3,8 @@ import 'package:installed_apps/app_info.dart';
 import 'package:shelf/global_functions.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/utilities/shelf_utils.dart';
-import 'package:shelf/widgets/blinders.dart';
+import 'package:shelf/widgets/app_list.dart';
+import 'package:shelf/widgets/Blinds.dart';
 
 
 
@@ -25,9 +26,9 @@ class SearchBuilder extends StatelessWidget {
             searchResults.add(app);
           }
         }
-        return appsLayout(searchResults);
+        return drawerLayout(searchResults);
       }
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingWidget();
 
     });
   }

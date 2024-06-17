@@ -4,7 +4,7 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
 import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/blinders.dart';
+import 'package:shelf/widgets/Blinds.dart';
 import 'package:shelf/widgets/boxes.dart';
 import 'package:shelf/widgets/search.dart';
 
@@ -25,7 +25,7 @@ initAppList() async {
   await getAppList();
 }
 
-appsLayout(List<AppInfo> allApps) {
+drawerLayout(List<AppInfo> allApps) {
   switch (layout) {
     case "Blinds": return Blinds(allApps: allApps);
     case "Boxes": return Boxes(allApps: allApps);

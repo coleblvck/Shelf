@@ -16,31 +16,40 @@ class PeekBox extends StatelessWidget {
               ? Axis.horizontal
               : Axis.vertical,
       children: [
-        Card(
-          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-          color: ShelfTheme.of(context)
-              .colors
-              .secondary
-              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-          child: Center(
-            child: peekCard1(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Card(
+            elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+            color: ShelfTheme.of(context)
+                .colors
+                .secondary
+                .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+            child: Center(
+              child: peekCard1(),
+            ),
           ),
         ),
-        Card(
-          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-          color: ShelfTheme.of(context)
-              .colors
-              .surface
-              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-          child: Container(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Card(
+            elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+            color: ShelfTheme.of(context)
+                .colors
+                .surface
+                .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+            child: Container(),
+          ),
         ),
-        Card(
-          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-          color: ShelfTheme.of(context)
-              .colors
-              .primary
-              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-          child: Container(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Card(
+            elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+            color: ShelfTheme.of(context)
+                .colors
+                .primary
+                .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+            child: Container(),
+          ),
         ),
       ],
     );
