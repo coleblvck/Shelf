@@ -16,7 +16,8 @@ Widget desktopBox2Child = Container(); //const AppListBuilder();
 bool fabEnabled = false;
 String greetingText = "Hola";
 String fabApp = "com.coleblvck.antiiq";
-String layout = "Blinds";
+String drawerLayout = "Boxes";
+StreamController<String> drawerLayoutStream = StreamController.broadcast();
 bool menuShowsListOnHome = true;
 bool menuShown = false;
 

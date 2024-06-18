@@ -31,7 +31,7 @@ class _DesktopState extends State<Desktop> {
               curve: Curves.decelerate,
               duration: const Duration(milliseconds: 300),
             ),
-          }
+          },
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -51,7 +51,14 @@ class _DesktopState extends State<Desktop> {
                         },
                       ),
                       desktopSecondBox(),
-                      const UtilCard(),
+                      StreamBuilder<bool>(
+                        stream: dashboardVisibilityStream.stream,
+                        builder: (context, snapshot) {
+                          final bool isVisible =
+                              snapshot.data ?? dashboardVisible;
+                          return isVisible ? const Dashboard() : Container();
+                        },
+                      ),
                     ],
                   )
                 : Row(
@@ -93,7 +100,7 @@ class _DesktopState extends State<Desktop> {
               },
               children: const [
                 AppListBuilder(),
-                GestureBox(),
+                HomeWidget(),
                 SearchPage(),
               ],
             )
@@ -108,14 +115,47 @@ class _DesktopState extends State<Desktop> {
                     },
                     children: const [
                       AppListBuilder(),
-                      GestureBox(),
+                      HomeWidget(),
                       SearchPage(),
                     ],
                   ),
                 ),
-                const UtilCard(),
+                StreamBuilder<bool>(
+                  stream: dashboardVisibilityStream.stream,
+                  builder: (context, snapshot) {
+                    final bool isVisible = snapshot.data ?? dashboardVisible;
+                    return isVisible ? const Dashboard() : Container();
+                  },
+                ),
               ],
             ),
+    );
+  }
+}
+
+class HomeWidget extends StatelessWidget {
+  const HomeWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const GestureBox();
+  }
+}
+
+class SettingsBox extends StatelessWidget {
+  const SettingsBox({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Card(
+        color: ShelfTheme.of(context).colors.primary.withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+      ),
     );
   }
 }
@@ -129,13 +169,21 @@ class GestureBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity! > 200 && dashboardVisible) {
+          updateDashboardVisibility(false);
+        }
+        if (details.primaryVelocity! < -200 && !dashboardVisible) {
+          updateDashboardVisibility(true);
+        }
+      },
       child: Container(),
     );
   }
 }
 
-class UtilCard extends StatelessWidget {
-  const UtilCard({
+class Dashboard extends StatelessWidget {
+  const Dashboard({
     super.key,
   });
 
@@ -144,109 +192,107 @@ class UtilCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
-          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-          color: ShelfTheme.of(context)
-              .colors
-              .primary
-              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TimeWidget(),
-                    ],
-                  ),
+        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+        color: ShelfTheme.of(context)
+            .colors
+            .primary
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TimeWidget(),
+                  ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    toggleFirstBoxVisibility();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: StreamBuilder<bool>(
-                        stream: firstBoxVisibilityStream.stream,
-                        builder: (context, snapshot) {
-                          final bool isVisible =
-                              snapshot.data ?? firstBoxVisible;
-                          return isVisible
-                              ? Icon(
-                                  RemixIcon.eye_2,
-                                  color:
-                                      ShelfTheme.of(context).colors.onPrimary,
-                                  size: 30,
-                                )
-                              : Icon(
-                                  RemixIcon.eye_close,
-                                  color:
-                                      ShelfTheme.of(context).colors.onPrimary,
-                                  size: 30,
-                                );
-                        }),
-                  ),
-                ),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    launchApp(fabApp);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: widgetsWithActions(
-                        context)[currentActionWidgetAction]!["widget"],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    secondBoxController.animateToPage(
-                      2,
-                      curve: Curves.linear,
-                      duration: const Duration(milliseconds: 300),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Icon(
-                      RemixIcon.search,
-                      color: ShelfTheme.of(context).colors.onPrimary,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                StreamBuilder<int>(
-                    stream: secondBoxIndexStream.stream,
-                    builder: (context, snapshot) {
-                      final int appDrawerIndex =
-                          snapshot.data ?? secondBoxIndex;
-                      return GestureDetector(
-                        onTap: () {
-                          toggleMenu();
-                        },
-                        onLongPress: () {
-                          refreshShelf();
-                        },
-                        child: appDrawerIndex != 1
+              ),
+              GestureDetector(
+                onTap: () {
+                  toggleFirstBoxVisibility();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: StreamBuilder<bool>(
+                      stream: firstBoxVisibilityStream.stream,
+                      builder: (context, snapshot) {
+                        final bool isVisible = snapshot.data ?? firstBoxVisible;
+                        return isVisible
                             ? Icon(
-                                RemixIcon.dashboard,
+                                RemixIcon.eye_2,
                                 color: ShelfTheme.of(context).colors.onPrimary,
                                 size: 30,
                               )
                             : Icon(
-                                RemixIcon.apps_2,
+                                RemixIcon.eye_close,
                                 color: ShelfTheme.of(context).colors.onPrimary,
                                 size: 30,
-                              ),
-                      );
-                    }),
-              ],
-            ),
-          )),
+                              );
+                      }),
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  launchApp(fabApp);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: widgetsWithActions(
+                      context)[currentActionWidgetAction]!["widget"],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  secondBoxController.animateToPage(
+                    2,
+                    curve: Curves.linear,
+                    duration: const Duration(milliseconds: 300),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Icon(
+                    RemixIcon.search,
+                    color: ShelfTheme.of(context).colors.onPrimary,
+                    size: 30,
+                  ),
+                ),
+              ),
+              StreamBuilder<int>(
+                stream: secondBoxIndexStream.stream,
+                builder: (context, snapshot) {
+                  final int appDrawerIndex = snapshot.data ?? secondBoxIndex;
+                  return GestureDetector(
+                    onTap: () {
+                      toggleMenu();
+                    },
+                    onLongPress: () {
+                      refreshShelf();
+                    },
+                    child: appDrawerIndex != 1
+                        ? Icon(
+                            RemixIcon.dashboard,
+                            color: ShelfTheme.of(context).colors.onPrimary,
+                            size: 30,
+                          )
+                        : Icon(
+                            RemixIcon.apps_2,
+                            color: ShelfTheme.of(context).colors.onPrimary,
+                            size: 30,
+                          ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -29,3 +29,7 @@ launchApp(String appToLaunch) async {
     null;
   }
 }
+
+openAppSettings(String packageName) async {
+  InstalledApps.openSettings(packageName);
+}

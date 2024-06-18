@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
+import 'package:shelf/global_functions.dart';
 import 'package:shelf/ui/theming.dart';
 
 class Boxes extends StatelessWidget {
@@ -15,14 +16,23 @@ class Boxes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: GridView.builder(
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-        physics: const BouncingScrollPhysics(),
-        itemCount: allApps.length,
-        itemBuilder: (context, index) {
-          return GridItem(appInfo: allApps[index]);
-        },
+      child: Card(
+        color: ShelfTheme.of(context)
+            .colors
+            .surface
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4),
+            physics: const BouncingScrollPhysics(),
+            itemCount: allApps.length,
+            itemBuilder: (context, index) {
+              return GridItem(appInfo: allApps[index]);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -36,7 +46,10 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        InstalledApps.startApp(appInfo.packageName);
+        launchApp(appInfo.packageName);
+      },
+      onLongPress: () {
+        openAppSettings(appInfo.packageName);
       },
       child: Card(
         elevation: 5,
@@ -45,7 +58,7 @@ class GridItem extends StatelessWidget {
             .surface
             .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
         child: Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -56,6 +69,7 @@ class GridItem extends StatelessWidget {
                     appInfo.name,
                     textAlign: TextAlign.left,
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         TextStyle(color: ShelfTheme.of(context).colors.primary),
                   ),

@@ -1,16 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:intl/intl.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/Blinds.dart';
-import 'package:shelf/widgets/boxes.dart';
-import 'package:shelf/widgets/search.dart';
 
 getAppList() async {
   List<AppInfo> apps = await InstalledApps.getInstalledApps(
@@ -27,16 +22,6 @@ getAppList() async {
 
 initAppList() async {
   await getAppList();
-}
-
-Widget drawerLayout(List<AppInfo> allApps) {
-  switch (layout) {
-    case "Blinds":
-      return Blinds(allApps: allApps);
-    case "Boxes":
-      return Boxes(allApps: allApps);
-  }
-  return Blinds(allApps: allApps);
 }
 
 refreshShelf() async {
@@ -81,4 +66,16 @@ updateFirstBoxVisibility(bool isVisible) {
 
 toggleFirstBoxVisibility() {
   updateFirstBoxVisibility(!firstBoxVisible);
+}
+
+bool dashboardVisible = true;
+StreamController<bool> dashboardVisibilityStream = StreamController.broadcast();
+
+updateDashboardVisibility(bool isVisible) {
+  dashboardVisible = isVisible;
+  dashboardVisibilityStream.add(isVisible);
+}
+
+toggleDashboardVisibility() {
+  updateDashboardVisibility(!dashboardVisible);
 }

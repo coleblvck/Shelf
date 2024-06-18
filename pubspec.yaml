@@ -39,7 +39,6 @@ dependencies:
   remix_icon_icons: ^1.0.1
   mini_music_visualizer: ^1.1.4
   dynamic_color: ^1.7.0
-  flip_card: ^0.7.0
   intl: ^0.19.0
   timer_builder: ^2.0.0
 
