@@ -305,8 +305,11 @@ class TimeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onLongPress: () {
         expandNotificationBar();
+      },
+      onTap: () {
+        toggleSystemUIMode();
       },
       child: TimerBuilder.periodic(
         const Duration(seconds: 1),
@@ -316,7 +319,7 @@ class TimeWidget extends StatelessWidget {
             child: Text(
               getCurrentTime(),
               style: TextStyle(
-                decoration: TextDecoration.underline,
+                decoration: TextDecoration.none,
                 decorationThickness: 2,
                 decorationStyle: TextDecorationStyle.solid,
                 decorationColor: ShelfTheme.of(context).colors.onPrimary,
