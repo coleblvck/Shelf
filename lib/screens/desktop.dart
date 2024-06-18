@@ -234,12 +234,12 @@ class Dashboard extends StatelessWidget {
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  launchApp(fabApp);
+                  actions(param: leadingWidgetApp)[leadingWidgetAction];
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: widgetsWithActions(
-                      context)[currentActionWidgetAction]!["widget"],
+                  child: widgets(
+                      context)[leadingWidget],
                 ),
               ),
               StreamBuilder<int>(
@@ -282,30 +282,38 @@ class TimeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () {
-        expandNotificationBar();
-      },
-      onTap: () {
         toggleSystemUIMode();
       },
-      child: TimerBuilder.periodic(
-        const Duration(seconds: 1),
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Text(
-              getCurrentTime(),
-              style: TextStyle(
-                decoration: TextDecoration.none,
-                decorationThickness: 2,
-                decorationStyle: TextDecorationStyle.solid,
-                decorationColor: ShelfTheme.of(context).colors.onPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: ShelfTheme.of(context).colors.onPrimary,
-              ),
-            ),
-          );
-        },
+      onTap: () {
+        expandNotificationBar();
+      },
+      child: Card(
+        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        color: ShelfTheme.of(context)
+            .colors
+            .secondary
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: TimerBuilder.periodic(
+            const Duration(seconds: 1),
+            builder: (context) {
+              return Text(
+                getCurrentTime(),
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  decorationThickness: 2,
+                  decorationStyle: TextDecorationStyle.solid,
+                  decorationColor: ShelfTheme.of(context).colors.onSecondary,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  color: ShelfTheme.of(context).colors.onSecondary,
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

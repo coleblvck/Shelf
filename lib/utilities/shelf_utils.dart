@@ -86,7 +86,7 @@ toggleDashboardVisibility() {
 
 const MethodChannel platformChannel = MethodChannel('shelfChannel');
 
-void expandNotificationBar() async {
+expandNotificationBar() async {
   try {
     await platformChannel.invokeMethod('expandStatusBar');
   } catch (e) {
