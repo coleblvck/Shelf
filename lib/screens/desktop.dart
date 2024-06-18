@@ -9,6 +9,7 @@ import 'package:shelf/utilities/shelf_utils.dart';
 import 'package:shelf/widgets/app_list.dart';
 import 'package:shelf/widgets/fab.dart';
 import 'package:shelf/widgets/search.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 class Desktop extends StatefulWidget {
   const Desktop({super.key});
@@ -41,14 +42,28 @@ class _DesktopState extends State<Desktop> {
             child: MediaQuery.of(context).orientation == Orientation.portrait
                 ? Column(
                     children: [
-                      desktopFirstBox(),
+                      StreamBuilder<bool>(
+                        stream: firstBoxVisibilityStream.stream,
+                        builder: (context, snapshot) {
+                          final bool isVisible =
+                              snapshot.data ?? firstBoxVisible;
+                          return isVisible ? desktopFirstBox() : Container();
+                        },
+                      ),
                       desktopSecondBox(),
                       const UtilCard(),
                     ],
                   )
                 : Row(
                     children: [
-                      desktopFirstBox(),
+                      StreamBuilder<bool>(
+                        stream: firstBoxVisibilityStream.stream,
+                        builder: (context, snapshot) {
+                          final bool isVisible =
+                              snapshot.data ?? firstBoxVisible;
+                          return isVisible ? desktopFirstBox() : Container();
+                        },
+                      ),
                       desktopSecondBox(landscapeOT: true),
                     ],
                   ),
@@ -76,10 +91,10 @@ class _DesktopState extends State<Desktop> {
                 secondBoxIndexStream.add(index);
                 secondBoxIndex = index;
               },
-              children: [
-                const AppListBuilder(),
-                Container(),
-                const SearchPage(),
+              children: const [
+                AppListBuilder(),
+                GestureBox(),
+                SearchPage(),
               ],
             )
           : Column(
@@ -91,15 +106,30 @@ class _DesktopState extends State<Desktop> {
                       secondBoxIndexStream.add(index);
                       secondBoxIndex = index;
                     },
-                    children: [
-                      const AppListBuilder(),
-                      Container(),
+                    children: const [
+                      AppListBuilder(),
+                      GestureBox(),
+                      SearchPage(),
                     ],
                   ),
                 ),
                 const UtilCard(),
               ],
             ),
+    );
+  }
+}
+
+class GestureBox extends StatelessWidget {
+  const GestureBox({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      child: Container(),
     );
   }
 }
@@ -125,25 +155,40 @@ class UtilCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
+                const Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          refreshShelf();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(
-                            RemixIcon.restart_outline,
-                            color: ShelfTheme.of(context).colors.onPrimary,
-                            size: 30,
-                          ),
-                        ),
-                      ),
+                      TimeWidget(),
                     ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    toggleFirstBoxVisibility();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: StreamBuilder<bool>(
+                        stream: firstBoxVisibilityStream.stream,
+                        builder: (context, snapshot) {
+                          final bool isVisible =
+                              snapshot.data ?? firstBoxVisible;
+                          return isVisible
+                              ? Icon(
+                                  RemixIcon.eye_2,
+                                  color:
+                                      ShelfTheme.of(context).colors.onPrimary,
+                                  size: 30,
+                                )
+                              : Icon(
+                                  RemixIcon.eye_close,
+                                  color:
+                                      ShelfTheme.of(context).colors.onPrimary,
+                                  size: 30,
+                                );
+                        }),
                   ),
                 ),
                 GestureDetector(
@@ -183,6 +228,9 @@ class UtilCard extends StatelessWidget {
                         onTap: () {
                           toggleMenu();
                         },
+                        onLongPress: () {
+                          refreshShelf();
+                        },
                         child: appDrawerIndex != 1
                             ? Icon(
                                 RemixIcon.dashboard,
@@ -199,6 +247,37 @@ class UtilCard extends StatelessWidget {
               ],
             ),
           )),
+    );
+  }
+}
+
+class TimeWidget extends StatelessWidget {
+  const TimeWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        toggleSystemUIMode();
+      },
+      child: TimerBuilder.periodic(
+        const Duration(seconds: 1),
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Text(
+              getCurrentTime(),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: ShelfTheme.of(context).colors.onPrimary,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

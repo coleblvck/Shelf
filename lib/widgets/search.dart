@@ -40,11 +40,12 @@ class SearchPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Icon(
                     RemixIcon.search,
                     size: 30,
+                    color: ShelfTheme.of(context).colors.onPrimary,
                   ),
                 ),
                 Expanded(
@@ -52,6 +53,10 @@ class SearchPage extends StatelessWidget {
                     controller: searchController,
                     onChanged: (term) => search(),
                     decoration: const InputDecoration(border: InputBorder.none),
+                    style: TextStyle(
+                      color: ShelfTheme.of(context).colors.onPrimary,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -59,11 +64,12 @@ class SearchPage extends StatelessWidget {
                     searchController.text = "";
                     searchStreamController.add("");
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Icon(
                       RemixIcon.close_circle,
                       size: 30,
+                      color: ShelfTheme.of(context).colors.onPrimary,
                     ),
                   ),
                 ),
@@ -140,6 +146,9 @@ class SearchResultAppItem extends StatelessWidget {
         onTap: () {
           InstalledApps.startApp(appInfo.packageName);
         },
+        onLongPress: () {
+          InstalledApps.openSettings(appInfo.packageName);
+        },
         child: Card(
           elevation: ShelfTheme.of(context).uiParameters.cardElevation,
           color: ShelfTheme.of(context)
@@ -147,52 +156,35 @@ class SearchResultAppItem extends StatelessWidget {
               .surface
               .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
           child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
-                  Expanded(
-                    flex: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        appInfo.name,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: ShelfTheme.of(context).colors.primary,
-                        ),
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
+                Expanded(
+                  flex: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text(
+                      appInfo.name,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: ShelfTheme.of(context).colors.onSurface,
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      InstalledApps.openSettings(appInfo.packageName);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        RemixIcon.information,
-                        size: 28,
-                        color: ShelfTheme.of(context).colors.primary,
-                      ),
-                    ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Icon(
+                    RemixIcon.information,
+                    size: 30,
+                    color: ShelfTheme.of(context).colors.onSurface,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      InstalledApps.uninstallApp(appInfo.packageName);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        RemixIcon.delete_bin_7,
-                        size: 28,
-                        color: ShelfTheme.of(context).colors.secondary,
-                      ),
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

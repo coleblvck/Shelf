@@ -7,10 +7,7 @@ import 'package:shelf/utilities/shelf_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initColorScheme();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  //Move to desktop build?
-  initAppList();
+  await initShelf();
   runApp(const Shelf());
 }
 
@@ -29,8 +26,11 @@ class Shelf extends StatelessWidget {
             child: MaterialApp(
               title: 'Shelf',
               theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
+                textSelectionTheme: TextSelectionThemeData(
+                  cursorColor: currentColorScheme!.onPrimary,
+                  selectionHandleColor: currentColorScheme!.onPrimary,
+                  selectionColor: currentColorScheme!.onPrimary,
+                ),
               ),
               debugShowCheckedModeBanner: false,
               home: const Desktop(),
