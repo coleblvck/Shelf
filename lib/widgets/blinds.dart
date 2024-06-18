@@ -25,7 +25,7 @@ class Blinds extends StatelessWidget {
 }
 
 class BlindItem extends StatelessWidget {
-  BlindItem({super.key, required this.appInfo});
+  const BlindItem({super.key, required this.appInfo});
   final AppInfo appInfo;
 
   @override

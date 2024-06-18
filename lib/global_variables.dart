@@ -1,14 +1,9 @@
 import 'dart:async';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:installed_apps/installed_apps.dart';
 import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/Blinds.dart';
-import 'package:shelf/widgets/boxes.dart';
 import 'package:shelf/widgets/peek_box.dart';
 
 Widget desktopBox1Child = const PeekBox();

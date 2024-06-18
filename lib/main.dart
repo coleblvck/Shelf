@@ -1,6 +1,4 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shelf/screens/desktop.dart';
 import 'package:shelf/ui/theming.dart';
 import 'package:shelf/utilities/shelf_utils.dart';

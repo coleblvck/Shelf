@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:shelf/global_functions.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/utilities/shelf_utils.dart';
-import 'package:shelf/widgets/Blinds.dart';
+import 'package:shelf/widgets/blinds.dart';
 import 'package:shelf/widgets/boxes.dart';
 
 class AppListBuilder extends StatelessWidget {

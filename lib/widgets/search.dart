@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:installed_apps/installed_apps.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
-import 'package:shelf/global_functions.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/utilities/shelf_utils.dart';
 import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/Blinds.dart';
+import 'package:shelf/widgets/blinds.dart';
+import 'package:shelf/widgets/boxes.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({
@@ -120,11 +118,13 @@ class SearchResultsBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: apps.length,
-      itemExtent: 60,
-      itemBuilder: (context, index) {
-        return BlindItem(appInfo: apps[index]);
+    return StreamBuilder<String>(
+      stream: drawerLayoutStream.stream,
+      builder: (context, snapshot) {
+        final String layout = snapshot.data ?? drawerLayout;
+        return layout == "Boxes"
+            ? Boxes(allApps: apps)
+            : Blinds(allApps: apps);
       },
     );
   }

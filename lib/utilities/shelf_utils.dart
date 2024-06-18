@@ -25,8 +25,10 @@ initAppList() async {
 }
 
 refreshShelf() async {
+  updateRefreshProcess(true);
   await refreshColorScheme();
   await getAppList();
+  updateRefreshProcess(false);
 }
 
 String getCurrentTime() {
@@ -90,4 +92,12 @@ void expandNotificationBar() async {
   } catch (e) {
     null;
   }
+}
+
+bool isShelfRefreshing = false;
+StreamController<bool> isShelfRefreshingStream = StreamController.broadcast();
+
+updateRefreshProcess(bool value) {
+  isShelfRefreshing = value;
+  isShelfRefreshingStream.add(value);
 }
