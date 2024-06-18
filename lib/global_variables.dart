@@ -19,7 +19,6 @@ String fabApp = "com.coleblvck.antiiq";
 String layout = "Blinds";
 bool menuShowsListOnHome = true;
 bool menuShown = false;
-TextEditingController searchController = TextEditingController();
 
 StreamController<List<AppInfo>> allAppsListStream =
     StreamController.broadcast();
@@ -32,7 +31,7 @@ Map<String, Map<String, dynamic>> widgetsWithActions(context) => {
       "visualizer": {
         "widget": MiniMusicVisualizer(
           animate: true,
-          radius: 4,
+          radius: 8,
           height: 24,
           width: 10,
           color: ShelfTheme.of(context).colors.onPrimary,

@@ -8,6 +8,7 @@ import 'package:shelf/ui/theming.dart';
 import 'package:shelf/utilities/shelf_utils.dart';
 import 'package:shelf/widgets/app_list.dart';
 import 'package:shelf/widgets/fab.dart';
+import 'package:shelf/widgets/search.dart';
 
 class Desktop extends StatefulWidget {
   const Desktop({super.key});
@@ -24,7 +25,11 @@ class _DesktopState extends State<Desktop> {
       onPopInvoked: (didPop) => {
         if (secondBoxIndex != 1)
           {
-            secondBoxController.jumpToPage(1),
+            secondBoxController.animateToPage(
+              1,
+              curve: Curves.decelerate,
+              duration: const Duration(milliseconds: 300),
+            ),
           }
       },
       child: Scaffold(
@@ -38,7 +43,7 @@ class _DesktopState extends State<Desktop> {
                     children: [
                       desktopFirstBox(),
                       desktopSecondBox(),
-                      utilCard(),
+                      const UtilCard(),
                     ],
                   )
                 : Row(
@@ -54,7 +59,58 @@ class _DesktopState extends State<Desktop> {
     );
   }
 
-  Padding utilCard() {
+  Expanded desktopFirstBox() {
+    return Expanded(
+      flex: 2,
+      child: desktopBox1Child,
+    );
+  }
+
+  Expanded desktopSecondBox({bool landscapeOT = false}) {
+    return Expanded(
+      flex: 4,
+      child: !landscapeOT
+          ? PageView(
+              controller: secondBoxController,
+              onPageChanged: (index) {
+                secondBoxIndexStream.add(index);
+                secondBoxIndex = index;
+              },
+              children: [
+                const AppListBuilder(),
+                Container(),
+                const SearchPage(),
+              ],
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: PageView(
+                    controller: secondBoxController,
+                    onPageChanged: (index) {
+                      secondBoxIndexStream.add(index);
+                      secondBoxIndex = index;
+                    },
+                    children: [
+                      const AppListBuilder(),
+                      Container(),
+                    ],
+                  ),
+                ),
+                const UtilCard(),
+              ],
+            ),
+    );
+  }
+}
+
+class UtilCard extends StatelessWidget {
+  const UtilCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
@@ -69,33 +125,50 @@ class _DesktopState extends State<Desktop> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
+                Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        RemixIcon.search,
-                        size: 30,
+                      GestureDetector(
+                        onTap: () {
+                          refreshShelf();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(
+                            RemixIcon.restart_outline,
+                            color: ShelfTheme.of(context).colors.onPrimary,
+                            size: 30,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     launchApp(fabApp);
                   },
-                  child: widgetsWithActions(
-                      context)[currentActionWidgetAction]!["widget"],
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: widgetsWithActions(
+                        context)[currentActionWidgetAction]!["widget"],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    refreshShelf();
+                    secondBoxController.animateToPage(
+                      2,
+                      curve: Curves.linear,
+                      duration: const Duration(milliseconds: 300),
+                    );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.only(right: 8.0),
                     child: Icon(
-                      RemixIcon.restart_outline,
+                      RemixIcon.search,
                       color: ShelfTheme.of(context).colors.onPrimary,
                       size: 30,
                     ),
@@ -126,130 +199,6 @@ class _DesktopState extends State<Desktop> {
               ],
             ),
           )),
-    );
-  }
-
-  Card searchCard() {
-    return Card(
-        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-        color: ShelfTheme.of(context)
-            .colors
-            .primary
-            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                RemixIcon.search,
-                size: 30,
-              ),
-            ),
-            Expanded(
-              child: TextField(
-                controller: searchController,
-                onChanged: (term) => setState(() {
-                  search(term);
-                }),
-                decoration: const InputDecoration(border: InputBorder.none),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                refreshShelf();
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  RemixIcon.refresh_outline,
-                  size: 30,
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: widgetsWithActions(
-                  context)[currentActionWidgetAction]!["widget"],
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  searchController.clear();
-                  search("");
-                });
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  RemixIcon.close_circle,
-                  size: 30,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  toggleMenu();
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: menuShown
-                    ? const Icon(
-                        RemixIcon.arrow_left_up,
-                        size: 30,
-                      )
-                    : const Icon(
-                        RemixIcon.menu_4,
-                        size: 30,
-                      ),
-              ),
-            ),
-          ],
-        ));
-  }
-
-  Expanded desktopFirstBox() {
-    return Expanded(
-      flex: 2,
-      child: desktopBox1Child,
-    );
-  }
-
-  Expanded desktopSecondBox({bool landscapeOT = false}) {
-    return Expanded(
-      flex: 4,
-      child: !landscapeOT
-          ? PageView(
-              controller: secondBoxController,
-              onPageChanged: (index) {
-                secondBoxIndexStream.add(index);
-                secondBoxIndex = index;
-              },
-              children: [
-                const AppListBuilder(),
-                Container(),
-              ],
-            )
-          : Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    controller: secondBoxController,
-                    onPageChanged: (index) {
-                      secondBoxIndexStream.add(index);
-                      secondBoxIndex = index;
-                    },
-                    children: [
-                      const AppListBuilder(),
-                      Container(),
-                    ],
-                  ),
-                ),
-                utilCard(),
-              ],
-            ),
     );
   }
 }

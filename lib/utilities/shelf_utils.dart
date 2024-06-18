@@ -25,11 +25,12 @@ initAppList() async {
   await getAppList();
 }
 
-drawerLayout(List<AppInfo> allApps) {
+Widget drawerLayout(List<AppInfo> allApps) {
   switch (layout) {
     case "Blinds": return Blinds(allApps: allApps);
     case "Boxes": return Boxes(allApps: allApps);
   }
+  return Blinds(allApps: allApps);
 }
 
 refreshShelf() async {

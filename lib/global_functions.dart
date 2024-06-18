@@ -10,27 +10,21 @@ import 'package:shelf/widgets/search.dart';
 
 toggleMenu() {
   secondBoxController.page == 1
-      ? secondBoxController.jumpToPage(0)
-      : secondBoxController.jumpToPage(1);
-}
-
-search(term) {
-  if (menuShown) {
-    toggleMenu();
-  }
-  if (searchController.text != "") {
-    desktopBox2Child = SearchBuilder(
-      term: term,
-    );
-  } else {
-    desktopBox2Child = Container();
-  }
+      ? secondBoxController.animateToPage(
+          0,
+          curve: Curves.linear,
+          duration: const Duration(milliseconds: 300),
+        )
+      : secondBoxController.animateToPage(
+          1,
+          curve: Curves.linear,
+          duration: const Duration(milliseconds: 300),
+        );
 }
 
 launchApp(String appToLaunch) async {
   try {
-    bool? success = await InstalledApps.startApp(appToLaunch);
-    print(success);
+    await InstalledApps.startApp(appToLaunch);
   } catch (e) {
     null;
   }
