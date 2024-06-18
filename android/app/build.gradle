@@ -26,7 +26,7 @@ if (flutterVersionName == null) {
 android {
     namespace = "com.coleblvck.shelf"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    //ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

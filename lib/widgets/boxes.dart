@@ -25,7 +25,7 @@ class Boxes extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4),
+                crossAxisCount: 5),
             physics: const BouncingScrollPhysics(),
             itemCount: allApps.length,
             itemBuilder: (context, index) {
@@ -58,7 +58,7 @@ class GridItem extends StatelessWidget {
             .surface
             .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
         child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -70,8 +70,10 @@ class GridItem extends StatelessWidget {
                     textAlign: TextAlign.left,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        TextStyle(color: ShelfTheme.of(context).colors.primary),
+                    style: TextStyle(
+                      color: ShelfTheme.of(context).colors.primary,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],

@@ -38,14 +38,16 @@ bool systemUIShown = true;
 
 toggleSystemUIMode() {
   !systemUIShown
-      ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values)
+      ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values)
       : SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   systemUIShown = !systemUIShown;
 }
 
 setSystemUIMode(bool mode) {
   mode
-      ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values)
+      ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values)
       : SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   systemUIShown = mode;
 }
@@ -78,4 +80,14 @@ updateDashboardVisibility(bool isVisible) {
 
 toggleDashboardVisibility() {
   updateDashboardVisibility(!dashboardVisible);
+}
+
+const MethodChannel platformChannel = MethodChannel('shelfChannel');
+
+void expandNotificationBar() async {
+  try {
+    await platformChannel.invokeMethod('expandStatusBar');
+  } catch (e) {
+    null;
+  }
 }
