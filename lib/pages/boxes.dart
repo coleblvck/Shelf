@@ -22,15 +22,18 @@ class Boxes extends StatelessWidget {
             .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5),
-            physics: const BouncingScrollPhysics(),
-            itemCount: allApps.length,
-            itemBuilder: (context, index) {
-              return GridItem(appInfo: allApps[index]);
-            },
-          ),
+          child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverGrid.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5),
+                  itemCount: allApps.length,
+                  itemBuilder: (context, index) {
+                    return GridItem(appInfo: allApps[index]);
+                  },
+                ),
+              ]),
         ),
       ),
     );
@@ -57,26 +60,27 @@ class GridItem extends StatelessWidget {
             .surface
             .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
         child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    appInfo.name,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: ShelfTheme.of(context).colors.primary,
-                      fontSize: 12,
-                    ),
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(flex: 1, child: Image.memory(appInfo.icon!)),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  appInfo.name,
+                  textAlign: TextAlign.left,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: ShelfTheme.of(context).colors.primary,
+                    fontSize: 12,
                   ),
                 ),
-              ],
-            )),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

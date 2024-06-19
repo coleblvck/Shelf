@@ -9,6 +9,8 @@ class ShelfColorScheme {
     required this.onPrimary,
     required this.secondary,
     required this.onSecondary,
+    required this.tertiary,
+    required this.onTertiary,
     required this.surface,
     required this.onSurface,
     required this.brightness,
@@ -18,6 +20,8 @@ class ShelfColorScheme {
   final Color onPrimary;
   final Color secondary;
   final Color onSecondary;
+  final Color tertiary;
+  final Color onTertiary;
   final Color surface;
   final Color onSurface;
   final Brightness brightness;
@@ -26,13 +30,15 @@ class ShelfColorScheme {
 
 enum ColorSchemeType { shelf, dynamic }
 
-ShelfColorScheme defaultColors = ShelfColorScheme(
-  primary: Colors.orange,
-  onPrimary: Colors.black,
-  secondary: Colors.purple.withBlue(10),
-  onSecondary: Colors.black,
-  surface: Colors.black,
-  onSurface: Colors.white,
+ShelfColorScheme defaultColors = const ShelfColorScheme(
+  primary: Color.fromARGB(255, 242, 190, 110),
+  onPrimary: Color.fromARGB(255, 0, 0, 0),
+  secondary: Color.fromARGB(255, 211, 236, 158),
+  onSecondary: Color.fromARGB(255, 0, 0, 0),
+  tertiary: Color.fromARGB(255, 255, 221, 175),
+  onTertiary: Color.fromARGB(255, 0, 0, 0),
+  surface: Color.fromARGB(255, 0, 0, 0),
+  onSurface: Color.fromARGB(255, 255, 255, 255),
   brightness: Brightness.dark,
   colorSchemeType: ColorSchemeType.shelf,
 );
@@ -93,6 +99,8 @@ getColorScheme() async {
       onPrimary: dynamicColors.onPrimary,
       secondary: dynamicColors.tertiary,
       onSecondary: dynamicColors.onTertiary,
+      tertiary: dynamicColors.secondary,
+      onTertiary: dynamicColors.onSecondary,
       surface: dynamicColors.surface,
       onSurface: dynamicColors.onSurface,
       brightness: Brightness.dark,

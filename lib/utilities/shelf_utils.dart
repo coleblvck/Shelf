@@ -60,18 +60,6 @@ initShelf() async {
   setSystemUIMode(false);
 }
 
-bool firstBoxVisible = true;
-StreamController<bool> firstBoxVisibilityStream = StreamController.broadcast();
-
-updateFirstBoxVisibility(bool isVisible) {
-  firstBoxVisible = isVisible;
-  firstBoxVisibilityStream.add(isVisible);
-}
-
-toggleFirstBoxVisibility() {
-  updateFirstBoxVisibility(!firstBoxVisible);
-}
-
 bool dashboardVisible = true;
 StreamController<bool> dashboardVisibilityStream = StreamController.broadcast();
 

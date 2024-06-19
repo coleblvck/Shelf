@@ -5,25 +5,29 @@ import 'package:installed_apps/app_info.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/widgets/app_list.dart';
-import 'package:shelf/widgets/blinds.dart';
-import 'package:shelf/widgets/boxes.dart';
+import 'package:shelf/pages/blinds.dart';
+import 'package:shelf/pages/boxes.dart';
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({
+import '../utilities/loading_widget.dart';
+
+
+String drawerLayout = "Boxes";
+StreamController<String> drawerLayoutStream = StreamController.broadcast();
+
+String searchTerm = "";
+final TextEditingController searchController = TextEditingController();
+final StreamController searchStreamController = StreamController.broadcast();
+search() {
+  searchStreamController.add(searchController.text);
+}
+
+class ShelfDrawer extends StatelessWidget {
+  const ShelfDrawer({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    String term = "";
-    final TextEditingController searchController = TextEditingController();
-    final StreamController searchStreamController =
-        StreamController.broadcast();
-    search() {
-      searchStreamController.add(searchController.text);
-    }
-
     return Column(
       children: [
         Padding(
@@ -79,7 +83,7 @@ class SearchPage extends StatelessWidget {
           child: StreamBuilder(
             stream: searchStreamController.stream,
             builder: (context, searchStreamData) {
-              final String searchTerm = searchStreamData.data ?? term;
+              final String term = searchStreamData.data ?? searchTerm;
               return StreamBuilder<List<AppInfo>>(
                 stream: allAppsListStream.stream,
                 builder: (context, snapshot) {
@@ -89,12 +93,12 @@ class SearchPage extends StatelessWidget {
                   for (AppInfo app in appsToDisplay) {
                     if (app.name
                         .toLowerCase()
-                        .contains(searchTerm.toLowerCase())) {
+                        .contains(term.toLowerCase())) {
                       searchResults.add(app);
                     }
                   }
                   if (appsToDisplay.isNotEmpty) {
-                    return SearchResultsBuilder(apps: searchResults);
+                    return DrawerBuilder(apps: searchResults);
                   }
 
                   return const LoadingWidget();
@@ -108,8 +112,8 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-class SearchResultsBuilder extends StatelessWidget {
-  const SearchResultsBuilder({
+class DrawerBuilder extends StatelessWidget {
+  const DrawerBuilder({
     super.key,
     required this.apps,
   });
@@ -122,9 +126,7 @@ class SearchResultsBuilder extends StatelessWidget {
       stream: drawerLayoutStream.stream,
       builder: (context, snapshot) {
         final String layout = snapshot.data ?? drawerLayout;
-        return layout == "Boxes"
-            ? Boxes(allApps: apps)
-            : Blinds(allApps: apps);
+        return layout == "Boxes" ? Boxes(allApps: apps) : Blinds(allApps: apps);
       },
     );
   }
