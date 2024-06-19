@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:installed_apps/app_info.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
+import 'package:shelf/utilities/app_scout/app_scout.dart';
 
 import '../flow/flow.dart';
-import '../global_functions.dart';
 import '../global_variables.dart';
 import '../pages/pages.dart';
 import '../ui/theming.dart';
@@ -87,17 +87,17 @@ class Dashboard extends StatelessWidget {
                       }),
                 ),
               ),
-              StreamBuilder<List<AppInfo>>(
+              StreamBuilder<List<AppDetail>>(
                   stream: allAppsListStream.stream,
                   builder: (context, snapshot) {
-                    final List<AppInfo> apps = snapshot.data ?? allAppsList;
+                    final List<AppDetail> apps = snapshot.data ?? allAppsList;
                     return apps
                             .map((app) => app.packageName)
                             .contains(leadingWidgetApp)
                         ? GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
-                              launchApp(leadingWidgetApp);
+                              AppScout.launchApp(leadingWidgetApp);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(right: 8.0),

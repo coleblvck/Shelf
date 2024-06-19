@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:installed_apps/installed_apps.dart';
-import 'package:installed_apps/app_info.dart';
 import 'package:shelf/ui/theming.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
+import 'package:shelf/utilities/app_scout/app_scout.dart';
 
 class Blinds extends StatelessWidget {
   const Blinds({
@@ -9,7 +9,7 @@ class Blinds extends StatelessWidget {
     required this.allApps,
   });
 
-  final List<AppInfo> allApps;
+  final List<AppDetail> allApps;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class Blinds extends StatelessWidget {
 
 class BlindItem extends StatelessWidget {
   const BlindItem({super.key, required this.appInfo});
-  final AppInfo appInfo;
+  final AppDetail appInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,10 @@ class BlindItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
         onTap: () {
-          InstalledApps.startApp(appInfo.packageName);
+          AppScout.launchApp(appInfo.packageName);
         },
         onLongPress: () {
-          InstalledApps.openSettings(appInfo.packageName);
+          AppScout.openAppSettings(appInfo.packageName);
         },
         child: Card(
           elevation: ShelfTheme.of(context).uiParameters.cardElevation,

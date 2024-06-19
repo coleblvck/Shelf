@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:installed_apps/app_info.dart';
-import 'package:shelf/global_functions.dart';
 import 'package:shelf/ui/theming.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
+import 'package:shelf/utilities/app_scout/app_scout.dart';
 
 class Boxes extends StatelessWidget {
   const Boxes({
@@ -9,7 +9,7 @@ class Boxes extends StatelessWidget {
     required this.allApps,
   });
 
-  final List<AppInfo> allApps;
+  final List<AppDetail> allApps;
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +42,16 @@ class Boxes extends StatelessWidget {
 
 class GridItem extends StatelessWidget {
   const GridItem({super.key, required this.appInfo});
-  final AppInfo appInfo;
+  final AppDetail appInfo;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        launchApp(appInfo.packageName);
+        AppScout.launchApp(appInfo.packageName);
       },
       onLongPress: () {
-        openAppSettings(appInfo.packageName);
+        AppScout.openAppSettings(appInfo.packageName);
       },
       child: Card(
         elevation: 5,

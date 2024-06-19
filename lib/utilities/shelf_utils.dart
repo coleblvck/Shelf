@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:installed_apps/app_info.dart';
-import 'package:installed_apps/installed_apps.dart';
 import 'package:intl/intl.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
+import 'package:shelf/utilities/app_scout/app_scout.dart';
 
 getAppList() async {
-  List<AppInfo> apps = await InstalledApps.getInstalledApps(
-    true,
+  List<AppDetail> apps = await AppScout.fetchApps(
+    false,
     true,
   );
   apps.sort(

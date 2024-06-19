@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:installed_apps/app_info.dart';
 import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:shelf/ui/theming.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
 
 
-StreamController<List<AppInfo>> allAppsListStream =
+StreamController<List<AppDetail>> allAppsListStream =
     StreamController.broadcast();
 
-List<AppInfo> allAppsList = [];
+List<AppDetail> allAppsList = [];
 
 String leadingWidget = "visualizer";
 String leadingWidgetApp = "com.coleblvck.antiiq";

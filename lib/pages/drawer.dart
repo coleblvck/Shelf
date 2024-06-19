@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:installed_apps/app_info.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
 import 'package:shelf/global_variables.dart';
 import 'package:shelf/ui/theming.dart';
 import 'package:shelf/pages/blinds.dart';
 import 'package:shelf/pages/boxes.dart';
+import 'package:shelf/utilities/app_scout/app_detail.dart';
 
 import '../utilities/loading_widget.dart';
 
@@ -84,13 +84,13 @@ class ShelfDrawer extends StatelessWidget {
             stream: searchStreamController.stream,
             builder: (context, searchStreamData) {
               final String term = searchStreamData.data ?? searchTerm;
-              return StreamBuilder<List<AppInfo>>(
+              return StreamBuilder<List<AppDetail>>(
                 stream: allAppsListStream.stream,
                 builder: (context, snapshot) {
-                  final List<AppInfo> searchResults = [];
-                  final List<AppInfo> appsToDisplay =
+                  final List<AppDetail> searchResults = [];
+                  final List<AppDetail> appsToDisplay =
                       snapshot.data ?? allAppsList;
-                  for (AppInfo app in appsToDisplay) {
+                  for (AppDetail app in appsToDisplay) {
                     if (app.name
                         .toLowerCase()
                         .contains(term.toLowerCase())) {
@@ -118,7 +118,7 @@ class DrawerBuilder extends StatelessWidget {
     required this.apps,
   });
 
-  final List<AppInfo> apps;
+  final List<AppDetail> apps;
 
   @override
   Widget build(BuildContext context) {
