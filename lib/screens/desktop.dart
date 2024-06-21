@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shelf/utilities/shelf_utils.dart';
 
-import '../dashboard/dashboard.dart';
-import '../flow/flow.dart';
-import '../pages/pages.dart';
+import '../state/state_util.dart';
+import '../ui/dashboard/dashboard.dart';
+import '../ui/flow/flow.dart';
+import '../ui/pages/pages.dart';
 
 class Desktop extends StatefulWidget {
   const Desktop({super.key});
@@ -18,9 +18,9 @@ class _DesktopState extends State<Desktop> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) => {
-        if (pagesIndex != 1)
+        if (shelfState.pages.index != 1)
           {
-            pagesController.animateToPage(
+            shelfState.pages.controller.animateToPage(
               1,
               curve: Curves.decelerate,
               duration: const Duration(milliseconds: 300),
@@ -37,33 +37,34 @@ class _DesktopState extends State<Desktop> {
                 ? Column(
                     children: [
                       StreamBuilder<bool>(
-                        stream: flowVisibilityStream.stream,
+                        stream: shelfState.flow.visibilityStream.stream,
                         builder: (context, snapshot) {
-                          final bool isVisible = snapshot.data ?? flowVisible;
+                          final bool isVisible = snapshot.data ?? shelfState.flow.visible;
                           return isVisible ? const ShelfFlow() : Container();
                         },
                       ),
-                      const ShelfPages(),
+                      ShelfPages(),
                       StreamBuilder<bool>(
-                        stream: dashboardVisibilityStream.stream,
+                        stream: shelfState.dashboard.visibilityStream.stream,
                         builder: (context, snapshot) {
                           final bool isVisible =
-                              snapshot.data ?? dashboardVisible;
+                              snapshot.data ?? shelfState.dashboard.visible;
                           return isVisible ? const Dashboard() : Container();
                         },
                       ),
                     ],
                   )
-                : Row(
+                : Column(
                     children: [
+                      ShelfPages(),
                       StreamBuilder<bool>(
-                        stream: flowVisibilityStream.stream,
+                        stream: shelfState.dashboard.visibilityStream.stream,
                         builder: (context, snapshot) {
-                          final bool isVisible = snapshot.data ?? flowVisible;
-                          return isVisible ? const ShelfFlow() : Container();
+                          final bool isVisible =
+                              snapshot.data ?? shelfState.dashboard.visible;
+                          return isVisible ? const Dashboard() : Container();
                         },
                       ),
-                      const ShelfPages(),
                     ],
                   ),
           ),

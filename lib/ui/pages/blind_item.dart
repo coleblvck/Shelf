@@ -1,28 +1,9 @@
+
 import 'package:flutter/material.dart';
-import 'package:shelf/ui/theming.dart';
-import 'package:shelf/utilities/app_scout/app_detail.dart';
-import 'package:shelf/utilities/app_scout/app_scout.dart';
 
-class Blinds extends StatelessWidget {
-  const Blinds({
-    super.key,
-    required this.allApps,
-  });
-
-  final List<AppDetail> allApps;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: allApps.length,
-      itemExtent: 60,
-      itemBuilder: (context, index) {
-        return BlindItem(appInfo: allApps[index]);
-      },
-    );
-  }
-}
+import '../../channels/app_scout/app_detail.dart';
+import '../../channels/app_scout/app_scout.dart';
+import '../theming.dart';
 
 class BlindItem extends StatelessWidget {
   const BlindItem({super.key, required this.appInfo});

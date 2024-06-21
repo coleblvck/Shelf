@@ -1,36 +1,20 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:shelf/pages/drawer.dart';
+import 'package:shelf/ui/pages/drawer.dart';
 
+import '../../channels/shelf/shelf.dart';
+import '../../state/pages_state.dart';
+import '../../state/state_util.dart';
 import '../dashboard/dashboard.dart';
 import '../flow/flow.dart';
-import '../utilities/shelf_utils.dart';
 
-PageController pagesController = PageController(initialPage: 1);
-
-int pagesIndex = 1;
-
-StreamController<int> pagesIndexStream = StreamController.broadcast();
-
-togglePagesGestureBoxDrawer() {
-  pagesController.page == 1
-      ? pagesController.animateToPage(
-          0,
-          curve: Curves.linear,
-          duration: const Duration(milliseconds: 300),
-        )
-      : pagesController.animateToPage(
-          1,
-          curve: Curves.linear,
-          duration: const Duration(milliseconds: 300),
-        );
-}
 
 class ShelfPages extends StatelessWidget {
-  const ShelfPages({
+  ShelfPages({
     super.key,
   });
+
+  final PagesState pagesState = shelfState.pages;
 
   @override
   Widget build(BuildContext context) {
@@ -38,37 +22,37 @@ class ShelfPages extends StatelessWidget {
       flex: 4,
       child: MediaQuery.of(context).orientation == Orientation.portrait
           ? PageView(
-              controller: pagesController,
+              controller: pagesState.controller,
               onPageChanged: (index) {
-                pagesIndexStream.add(index);
-                pagesIndex = index;
+                pagesState.indexStream.add(index);
+                pagesState.index = index;
               },
               children: const [
                 ShelfDrawer(),
                 GestureBox(),
               ],
             )
-          : Column(
+          : Row(
               children: [
+                StreamBuilder<bool>(
+                  stream: shelfState.flow.visibilityStream.stream,
+                  builder: (context, snapshot) {
+                    final bool isVisible = snapshot.data ?? shelfState.flow.visible;
+                    return isVisible ? const ShelfFlow() : Container();
+                  },
+                ),
                 Expanded(
                   child: PageView(
-                    controller: pagesController,
+                    controller: pagesState.controller,
                     onPageChanged: (index) {
-                      pagesIndexStream.add(index);
-                      pagesIndex = index;
+                      pagesState.indexStream.add(index);
+                      pagesState.index = index;
                     },
                     children: const [
                       ShelfDrawer(),
                       GestureBox(),
                     ],
                   ),
-                ),
-                StreamBuilder<bool>(
-                  stream: dashboardVisibilityStream.stream,
-                  builder: (context, snapshot) {
-                    final bool isVisible = snapshot.data ?? dashboardVisible;
-                    return isVisible ? const Dashboard() : Container();
-                  },
                 ),
               ],
             ),
@@ -87,15 +71,15 @@ class GestureBox extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity! > 200) {
-          expandNotificationBar();
+          ShelfChannel.expandNotificationBar();
         }
         if (details.primaryVelocity! < -200 &&
             MediaQuery.of(context).orientation == Orientation.portrait) {
-          toggleFlowVisibility();
+          shelfState.flow.toggleVisibility();
         }
       },
       onDoubleTap: () {
-        toggleDashboardVisibility();
+        shelfState.dashboard.toggleVisibility();
       },
       child: Container(),
     );

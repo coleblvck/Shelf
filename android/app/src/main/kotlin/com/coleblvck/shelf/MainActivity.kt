@@ -11,7 +11,8 @@ import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.annotation.RequiresApi
-import com.coleblvck.shelf.scoutUtils.MapUtil.Companion.convertAppToMap
+import com.coleblvck.shelf.scoutUtils.DrawableUtil
+import com.coleblvck.shelf.scoutUtils.MapUtil.Companion._convertAppToMap
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode.transparent
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -26,7 +27,7 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "shelfChannel"
     private val SCOUTCHANNEL = "appScoutChannel"
 
-    @RequiresApi(Build.VERSION_CODES.P)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -46,11 +47,9 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "fetchApps" -> {
-                    val includeSystemApps = call.argument("includeSystemApps") ?: false
-                    val includeAppIcons = call.argument("includeAppIcons") ?: true
                     Thread {
                         val apps: List<Map<String, Any?>> =
-                            fetchApps(includeSystemApps, includeAppIcons)
+                            fetchApps()
                         result.success(apps)
                     }.start()
 
@@ -95,20 +94,27 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun fetchApps(
-        includeSystemApps: Boolean,
-        includeAppIcons: Boolean,
-    ): List<Map<String, Any?>> {
-        var apps = packageManager.getInstalledApplications(0)
-        if (!includeSystemApps) {
-            apps = apps.filter { app -> !isSystemApp(app.packageName) }
-        }
-        return apps.map { app -> convertAppToMap(packageManager, app, includeAppIcons) }
-    }
 
-    private fun isSystemApp(packageName: String): Boolean {
-        return packageManager.getLaunchIntentForPackage(packageName) == null
+    private fun fetchApps(): List<Map<String, Any?>> {
+        val packageManager = context.packageManager
+        val allAppsList = packageManager.queryIntentActivities(
+            Intent(
+                Intent.ACTION_MAIN,
+                null
+            ).addCategory(Intent.CATEGORY_LAUNCHER), 0
+        )
+        val listToReturn = emptyList<Map<String, Any?>>().toMutableList()
+        for (appInfo in allAppsList) {
+            if (appInfo.activityInfo.packageName != context.packageName) {
+                val appMap = HashMap<String, Any?>()
+                appMap["name"] = appInfo.loadLabel(packageManager).toString()
+                appMap["packageName"] = appInfo.activityInfo.packageName
+                appMap["icon"] =
+                    DrawableUtil.drawableToByteArray(appInfo.activityInfo.loadIcon(packageManager))
+                listToReturn += appMap
+            }
+        }
+        return listToReturn
     }
 
     private fun launchApp(packageName: String): Boolean {
@@ -142,15 +148,6 @@ class MainActivity : FlutterActivity() {
             context.startActivity(intent)
             true
         } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun isAppInstalled(packageName: String?): Boolean {
-        return try {
-            packageManager.getPackageInfo(packageName ?: "", PackageManager.GET_ACTIVITIES)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
             false
         }
     }

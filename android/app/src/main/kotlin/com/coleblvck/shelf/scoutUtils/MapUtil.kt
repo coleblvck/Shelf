@@ -3,6 +3,7 @@ package com.coleblvck.shelf.scoutUtils
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.P
 import androidx.annotation.RequiresApi
@@ -11,7 +12,7 @@ import java.io.File
 class MapUtil {
     companion object {
         @RequiresApi(P)
-        fun convertAppToMap(
+        fun _convertAppToMap(
             packageManager: PackageManager,
             app: ApplicationInfo,
             includeAppIcon: Boolean,
@@ -28,6 +29,18 @@ class MapUtil {
             map["installed_timestamp"] = File(packageInfo.applicationInfo.sourceDir).lastModified()
             return map
 
+        }
+
+        fun getAppMap(
+            name: String,
+            packageName: String,
+            appIcon: Drawable
+        ): HashMap<String, Any?> {
+            val map = HashMap<String, Any?>()
+            map["name"] = name
+            map["packageName"] = packageName
+            map["icon"] = DrawableUtil.drawableToByteArray(appIcon)
+            return map
         }
 
 

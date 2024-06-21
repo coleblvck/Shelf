@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shelf/utilities/shelf_utils.dart';
+import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+import '../channels/shelf/shelf.dart';
+import '../state/state_util.dart';
 import '../ui/theming.dart';
 
 class TimeWidget extends StatelessWidget {
@@ -13,10 +15,10 @@ class TimeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () {
-        toggleSystemUIMode();
+        shelfState.uiMode.toggleUIMode();
       },
       onTap: () {
-        expandNotificationBar();
+        ShelfChannel.expandNotificationBar();
       },
       child: Card(
         elevation: ShelfTheme.of(context).uiParameters.cardElevation,
@@ -48,4 +50,10 @@ class TimeWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+
+String getCurrentTime() {
+  DateTime now = DateTime.now();
+  return DateFormat.jms().format(now);
 }

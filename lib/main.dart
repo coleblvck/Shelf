@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/screens/desktop.dart';
+import 'package:shelf/state/shelf_state.dart';
+import 'package:shelf/state/state_util.dart';
 import 'package:shelf/ui/theming.dart';
-import 'package:shelf/utilities/shelf_utils.dart';
+import 'package:shelf/utilities/user_prefs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initShelf();
+  shelfState = ShelfState();
+  userPrefs = await SharedPreferences.getInstance();
+  await shelfState.initShelf();
   runApp(const Shelf());
 }
 

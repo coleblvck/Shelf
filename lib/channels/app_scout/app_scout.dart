@@ -1,19 +1,13 @@
 import 'package:flutter/services.dart';
-import 'package:shelf/utilities/app_scout/app_detail.dart';
+
+import 'app_detail.dart';
 
 class AppScout {
   static const MethodChannel channel = MethodChannel("appScoutChannel");
 
-  static Future<List<AppDetail>> fetchApps([
-    bool includeSystemApps = false,
-    bool includeAppIcons = true,
-  ]) async {
+  static Future<List<AppDetail>> fetchApps() async {
     dynamic apps = await channel.invokeMethod(
       "fetchApps",
-      {
-        "includeSystemApps": includeSystemApps,
-        "includeAppIcons": includeAppIcons,
-      },
     );
     return AppDetail.parseList(apps);
   }

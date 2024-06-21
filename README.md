@@ -1,3 +1,3 @@
 # Shelf
 
-A modular android app launcher focused on customisation and simplicity.
+A fairly featured android app launcher focused on simplicity and a smooth workflow.
