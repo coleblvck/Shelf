@@ -4,7 +4,7 @@
 
 # Shelf
 
-Shelf is a simple Android App Launcher with simple gestures and productivity features.
+Android Desktop re-imagined with simple gestures and productivity features.
 
 </div>
 
