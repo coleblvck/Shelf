@@ -53,7 +53,7 @@ class UIParameters {
 }
 
 UIParameters defaultUIParameters = const UIParameters(
-  cardElevation: 5,
+  cardElevation: 2,
   cardAlpha: 450,
 );
 

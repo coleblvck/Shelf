@@ -1,13 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:shelf/ui/pages/drawer.dart';
 
-import '../../channels/shelf/shelf.dart';
-import '../../state/pages_state.dart';
-import '../../state/state_util.dart';
-import '../dashboard/dashboard.dart';
-import '../flow/flow.dart';
-
+import 'package:shelf/channels/shelf/shelf.dart';
+import 'package:shelf/state/pages_state.dart';
+import 'package:shelf/state/state_util.dart';
+import 'package:shelf/ui/flow/flow.dart';
 
 class ShelfPages extends StatelessWidget {
   ShelfPages({
@@ -22,10 +19,11 @@ class ShelfPages extends StatelessWidget {
       flex: 4,
       child: MediaQuery.of(context).orientation == Orientation.portrait
           ? PageView(
+              physics: const BouncingScrollPhysics(),
               controller: pagesState.controller,
               onPageChanged: (index) {
-                pagesState.indexStream.add(index);
                 pagesState.index = index;
+                pagesState.indexStream.add(index);
               },
               children: const [
                 ShelfDrawer(),
@@ -37,12 +35,14 @@ class ShelfPages extends StatelessWidget {
                 StreamBuilder<bool>(
                   stream: shelfState.flow.visibilityStream.stream,
                   builder: (context, snapshot) {
-                    final bool isVisible = snapshot.data ?? shelfState.flow.visible;
+                    final bool isVisible =
+                        snapshot.data ?? shelfState.flow.visible;
                     return isVisible ? const ShelfFlow() : Container();
                   },
                 ),
                 Expanded(
                   child: PageView(
+                    physics: const BouncingScrollPhysics(),
                     controller: pagesState.controller,
                     onPageChanged: (index) {
                       pagesState.indexStream.add(index);

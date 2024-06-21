@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:shelf/state/state_util.dart';
 
 import 'app_detail.dart';
 
@@ -31,5 +32,14 @@ class AppScout {
       "uninstallApp",
       {"packageName": packageName},
     );
+  }
+
+  static const EventChannel eventChannel = EventChannel("scoutUpdateChannel");
+  static initScoutListen() {
+    eventChannel.receiveBroadcastStream().listen(_onEvent);
+  }
+
+  static void _onEvent(Object? event) {
+    shelfState.refreshShelf();
   }
 }

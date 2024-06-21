@@ -4,6 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:shelf/utilities/user_prefs.dart';
 
 class FlowState {
+  PageController controller = PageController(initialPage: 0);
+
+  int index = 0;
+
+  StreamController<int> indexStream = StreamController.broadcast();
+
+  goToQuickNote() async {
+    if (!visible) {
+      toggleVisibility();
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    controller.page != 1
+        ? controller.animateToPage(
+            1,
+            curve: Curves.linear,
+            duration: const Duration(milliseconds: 300),
+          )
+        : null;
+  }
+
   String greetingText = "Double Tap.";
   StreamController<String> greetingTextStream = StreamController.broadcast();
   TextEditingController greetingTextController = TextEditingController();

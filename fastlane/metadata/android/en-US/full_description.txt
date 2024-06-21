@@ -1,0 +1,5 @@
+Shelf is a simple Android App Launcher with simple gestures and productivity features.
+
+- Easy and quick noting with a single note card
+- Quick Web search from the App Drawer (Google)
+- Gestures for easy accessibility

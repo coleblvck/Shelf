@@ -25,6 +25,17 @@ class _DesktopState extends State<Desktop> {
               curve: Curves.decelerate,
               duration: const Duration(milliseconds: 300),
             ),
+          }
+        else
+          {
+            if (shelfState.flow.index != 0)
+              {
+                shelfState.flow.controller.animateToPage(
+                  0,
+                  curve: Curves.decelerate,
+                  duration: const Duration(milliseconds: 300),
+                ),
+              }
           },
       },
       child: Scaffold(
@@ -39,7 +50,8 @@ class _DesktopState extends State<Desktop> {
                       StreamBuilder<bool>(
                         stream: shelfState.flow.visibilityStream.stream,
                         builder: (context, snapshot) {
-                          final bool isVisible = snapshot.data ?? shelfState.flow.visible;
+                          final bool isVisible =
+                              snapshot.data ?? shelfState.flow.visible;
                           return isVisible ? const ShelfFlow() : Container();
                         },
                       ),

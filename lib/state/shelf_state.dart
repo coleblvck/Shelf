@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:shelf/channels/app_scout/app_scout.dart';
 import 'package:shelf/state/drawer_state.dart';
 import 'package:shelf/state/flow_state.dart';
 import 'package:shelf/state/pages_state.dart';
@@ -20,15 +19,9 @@ class ShelfState {
   SearchState search = SearchState();
   FlowState flow = FlowState();
 
-  List<bool> isShelfRefreshing = [false, false];
-  StreamController<List<bool>> isShelfRefreshingStream =
-      StreamController.broadcast();
-
   refreshShelf({bool forceUpdate = false}) async {
-    updateRefreshProcess(true, forceUpdate);
-    await refreshColorScheme();
+    //await refreshColorScheme();
     await apps.get(forceUpdate: forceUpdate);
-    updateRefreshProcess(false, false);
   }
 
   initShelf() async {
@@ -63,12 +56,8 @@ class ShelfState {
     }
   }
 
-  updateRefreshProcess(bool isRefreshing, bool forceUpdate) {
-    isShelfRefreshing = [isRefreshing, forceUpdate];
-    isShelfRefreshingStream.add([isRefreshing, forceUpdate]);
-  }
-
   initApps() async {
     await apps.get();
+    AppScout.initScoutListen();
   }
 }

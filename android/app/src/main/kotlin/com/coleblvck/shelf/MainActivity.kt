@@ -4,46 +4,56 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.annotation.RequiresApi
 import com.coleblvck.shelf.scoutUtils.DrawableUtil
-import com.coleblvck.shelf.scoutUtils.MapUtil.Companion._convertAppToMap
+import com.coleblvck.shelf.scoutUtils.listener.DeviceAppsChangedListener
+import com.coleblvck.shelf.scoutUtils.listener.DeviceAppsChangedListenerInterface
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode.transparent
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import java.lang.reflect.Method
+
 
 class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.putExtra("background_mode", transparent.toString())
         super.onCreate(savedInstanceState)
+        appContext = this
     }
 
-    private val CHANNEL = "shelfChannel"
-    private val SCOUTCHANNEL = "appScoutChannel"
+    private val shelfChannel = "shelfChannel"
+    private val scoutChannel = "appScoutChannel"
+    private val scoutUpdateChannel = "scoutUpdateChannel"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger, CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger, shelfChannel
         ).setMethodCallHandler { call, result ->
-            if (call.method == "expandStatusBar") {
-                expandStatusBar()
-                result.success("Status Bar Expansion success!")
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "expandStatusBar" -> {
+                    expandStatusBar()
+                    result.success("Status Bar Expansion success!")
+
+                }
+
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
 
         MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger, SCOUTCHANNEL
+            flutterEngine.dartExecutor.binaryMessenger, scoutChannel
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "fetchApps" -> {
@@ -72,6 +82,52 @@ class MainActivity : FlutterActivity() {
 
                 else -> result.notImplemented()
             }
+        }
+        EventChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            scoutUpdateChannel
+        ).setStreamHandler(
+            UpdateHandler
+        )
+    }
+
+    companion object {
+
+        lateinit  var appContext: Context
+
+    }
+
+
+    object UpdateHandler : EventChannel.StreamHandler, DeviceAppsChangedListenerInterface {
+        private var appsChangeListener: DeviceAppsChangedListener? = null
+        override fun onListen(arguments: Any?, events: EventSink?) {
+
+                if (appsChangeListener == null) {
+                    appsChangeListener = DeviceAppsChangedListener(this)
+                }
+
+                appsChangeListener!!.register(appContext, events!!)
+
+        }
+
+        override fun onCancel(arguments: Any?) {
+            appsChangeListener?.unregister(appContext)
+        }
+
+        override fun onPackageInstalled(packageName: String?, events: EventSink?) {
+            events?.success("$packageName has been installed")
+        }
+
+        override fun onPackageUpdated(packageName: String?, events: EventSink?) {
+            events?.success("$packageName has been updated")
+        }
+
+        override fun onPackageUninstalled(packageName: String?, events: EventSink?) {
+            events?.success("$packageName has been uninstalled")
+        }
+
+        override fun onPackageChanged(packageName: String?, events: EventSink?) {
+            events?.success("$packageName has been changed")
         }
     }
 
