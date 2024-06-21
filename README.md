@@ -15,6 +15,6 @@ Shelf is a simple Android App Launcher with simple gestures and productivity fea
 - Gestures for easy accessibility
 
 ## Screenshots
-
-<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%">&nbsp;&nbsp;<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%">&nbsp;&nbsp;<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%">
-
+<div align="center">
+<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%">&nbsp;&nbsp;<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%">&nbsp;&nbsp;&nbsp;<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%">
+</div>
