@@ -28,7 +28,7 @@ class ShelfDrawer extends StatelessWidget {
                   elevation: ShelfTheme.of(context).uiParameters.cardElevation,
                   color: ShelfTheme.of(context)
                       .colors
-                      .primary
+                      .secondary
                       .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -39,7 +39,7 @@ class ShelfDrawer extends StatelessWidget {
                         child: Icon(
                           RemixIcon.search,
                           size: 30,
-                          color: ShelfTheme.of(context).colors.onPrimary,
+                          color: ShelfTheme.of(context).colors.onSecondary,
                         ),
                       ),
                       Expanded(
@@ -49,9 +49,10 @@ class ShelfDrawer extends StatelessWidget {
                           decoration:
                               const InputDecoration(border: InputBorder.none),
                           style: TextStyle(
-                            color: ShelfTheme.of(context).colors.onPrimary,
+                            color: ShelfTheme.of(context).colors.onSecondary,
                             fontSize: 20,
                           ),
+                          cursorColor: ShelfTheme.of(context).colors.onSecondary,
                         ),
                       ),
                       term != ""
@@ -65,7 +66,7 @@ class ShelfDrawer extends StatelessWidget {
                                   RemixIcon.firefox,
                                   size: 30,
                                   color:
-                                      ShelfTheme.of(context).colors.onPrimary,
+                                      ShelfTheme.of(context).colors.onSecondary,
                                 ),
                               ),
                             )
@@ -79,7 +80,7 @@ class ShelfDrawer extends StatelessWidget {
                           child: Icon(
                             RemixIcon.close_circle,
                             size: 30,
-                            color: ShelfTheme.of(context).colors.onPrimary,
+                            color: ShelfTheme.of(context).colors.onSecondary,
                           ),
                         ),
                       ),

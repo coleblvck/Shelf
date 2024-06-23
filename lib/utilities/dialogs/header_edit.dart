@@ -11,14 +11,14 @@ headerTextEditDialog(context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor: ShelfTheme.of(context).colors.tertiary,
+        backgroundColor: ShelfTheme.of(context).colors.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(
               RemixIcon.sticky_note,
-              color: ShelfTheme.of(context).colors.onTertiary,
+              color: ShelfTheme.of(context).colors.onSecondary,
               size: 50,
             ),
             const SizedBox(
@@ -27,7 +27,7 @@ headerTextEditDialog(context) {
             Text(
               "Edit Header",
               style: TextStyle(
-                  color: ShelfTheme.of(context).colors.onTertiary,
+                  color: ShelfTheme.of(context).colors.onSecondary,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),

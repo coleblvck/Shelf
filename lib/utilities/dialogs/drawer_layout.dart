@@ -10,14 +10,14 @@ drawerLayoutDialog(context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor: ShelfTheme.of(context).colors.tertiary,
+        backgroundColor: ShelfTheme.of(context).colors.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(
               RemixIcon.dashboard,
-              color: ShelfTheme.of(context).colors.onTertiary,
+              color: ShelfTheme.of(context).colors.onSecondary,
               size: 50,
             ),
             const SizedBox(
@@ -26,7 +26,7 @@ drawerLayoutDialog(context) {
             Text(
               "Drawer Layout",
               style: TextStyle(
-                  color: ShelfTheme.of(context).colors.onTertiary,
+                  color: ShelfTheme.of(context).colors.onSecondary,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),
@@ -45,7 +45,7 @@ drawerLayoutDialog(context) {
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
-                  ShelfTheme.of(context).colors.tertiary,
+                  ShelfTheme.of(context).colors.secondary,
                 ),
                 shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
@@ -60,15 +60,15 @@ drawerLayoutDialog(context) {
                     DrawerLayout.woven,
                     style: TextStyle(
                         fontSize: 20,
-                        color: ShelfTheme.of(context).colors.onTertiary),
+                        color: ShelfTheme.of(context).colors.onSecondary),
                   ),
                   shelfState.drawer.layout == DrawerLayout.woven
                       ? Checkbox(
                           value: true,
                           onChanged: null,
-                          checkColor: ShelfTheme.of(context).colors.onTertiary,
+                          checkColor: ShelfTheme.of(context).colors.onSecondary,
                           fillColor: WidgetStatePropertyAll(
-                            ShelfTheme.of(context).colors.tertiary,
+                            ShelfTheme.of(context).colors.secondary,
                           ),
                         )
                       : Container()
@@ -87,7 +87,7 @@ drawerLayoutDialog(context) {
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
-                  ShelfTheme.of(context).colors.tertiary,
+                  ShelfTheme.of(context).colors.secondary,
                 ),
                 shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
@@ -102,15 +102,15 @@ drawerLayoutDialog(context) {
                     DrawerLayout.boxes,
                     style: TextStyle(
                         fontSize: 20,
-                        color: ShelfTheme.of(context).colors.onTertiary),
+                        color: ShelfTheme.of(context).colors.onSecondary),
                   ),
                   shelfState.drawer.layout == DrawerLayout.boxes
                       ? Checkbox(
                           value: true,
                           onChanged: null,
-                          checkColor: ShelfTheme.of(context).colors.onTertiary,
+                          checkColor: ShelfTheme.of(context).colors.onSecondary,
                           fillColor: WidgetStatePropertyAll(
-                            ShelfTheme.of(context).colors.tertiary,
+                            ShelfTheme.of(context).colors.secondary,
                           ),
                         )
                       : Container()
@@ -129,7 +129,7 @@ drawerLayoutDialog(context) {
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
-                  ShelfTheme.of(context).colors.tertiary,
+                  ShelfTheme.of(context).colors.secondary,
                 ),
                 shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
@@ -144,15 +144,15 @@ drawerLayoutDialog(context) {
                     DrawerLayout.blinds,
                     style: TextStyle(
                         fontSize: 20,
-                        color: ShelfTheme.of(context).colors.onTertiary),
+                        color: ShelfTheme.of(context).colors.onSecondary),
                   ),
                   shelfState.drawer.layout == DrawerLayout.blinds
                       ? Checkbox(
                           value: true,
                           onChanged: null,
-                          checkColor: ShelfTheme.of(context).colors.onTertiary,
+                          checkColor: ShelfTheme.of(context).colors.onSecondary,
                           fillColor: WidgetStatePropertyAll(
-                            ShelfTheme.of(context).colors.tertiary,
+                            ShelfTheme.of(context).colors.secondary,
                           ),
                         )
                       : Container()

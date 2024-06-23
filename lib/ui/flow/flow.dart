@@ -40,7 +40,7 @@ class ShelfFlow extends StatelessWidget {
                 elevation: ShelfTheme.of(context).uiParameters.cardElevation,
                 color: ShelfTheme.of(context)
                     .colors
-                    .secondary
+                    .surface
                     .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
                 child: const Center(
                   child: Column(
@@ -124,9 +124,10 @@ class GreetingsWidget extends StatelessWidget {
               snapshot.data ?? shelfState.flow.greetingText;
           return Text(
             greetingText,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 60,
               fontWeight: FontWeight.w900,
+              color: ShelfTheme.of(context).colors.onSurface,
             ),
             textAlign: TextAlign.center,
           );
