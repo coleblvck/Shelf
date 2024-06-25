@@ -19,7 +19,8 @@ class ShelfPages extends StatelessWidget {
       flex: 4,
       child: MediaQuery.of(context).orientation == Orientation.portrait
           ? PageView(
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
+              pageSnapping: false,
               controller: pagesState.controller,
               onPageChanged: (index) {
                 pagesState.index = index;
@@ -42,7 +43,8 @@ class ShelfPages extends StatelessWidget {
                 ),
                 Expanded(
                   child: PageView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
+                    pageSnapping: false,
                     controller: pagesState.controller,
                     onPageChanged: (index) {
                       pagesState.indexStream.add(index);
@@ -80,6 +82,9 @@ class GestureBox extends StatelessWidget {
       },
       onDoubleTap: () {
         shelfState.dashboard.toggleVisibility();
+      },
+      onLongPress: () {
+        shelfState.parallax.toggleStatus();
       },
       child: Container(),
     );

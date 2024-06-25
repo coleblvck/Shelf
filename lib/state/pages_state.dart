@@ -14,12 +14,12 @@ class PagesState {
         ? controller.animateToPage(
             0,
             curve: Curves.linear,
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 200),
           )
         : controller.animateToPage(
             1,
             curve: Curves.linear,
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 200),
           );
   }
 }

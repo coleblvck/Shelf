@@ -2,6 +2,7 @@ import 'package:shelf/channels/app_scout/app_scout.dart';
 import 'package:shelf/state/drawer_state.dart';
 import 'package:shelf/state/flow_state.dart';
 import 'package:shelf/state/pages_state.dart';
+import 'package:shelf/state/parallax_state.dart';
 import 'package:shelf/state/search_state.dart';
 import 'package:shelf/state/system_ui_mode_state.dart';
 import 'package:shelf/utilities/user_prefs.dart';
@@ -18,6 +19,7 @@ class ShelfState {
   DrawerState drawer = DrawerState();
   SearchState search = SearchState();
   FlowState flow = FlowState();
+  ParallaxState parallax = ParallaxState();
 
   refreshShelf({bool forceUpdate = false}) async {
     //await refreshColorScheme();
@@ -37,6 +39,7 @@ class ShelfState {
     final String? greetingText = userPrefs.getString(PrefKeys.greetingText);
     final String? quickNoteText = userPrefs.getString(PrefKeys.quickNoteText);
     final String? drawerLayout = userPrefs.getString(PrefKeys.drawerLayout);
+    final bool? parallaxStatus = userPrefs.getBool(PrefKeys.parallaxStatus);
     if (flowVisible != null) {
       flow.updateVisibility(flowVisible, save: false);
     }
@@ -53,6 +56,11 @@ class ShelfState {
     }
     if (drawerLayout != null) {
       drawer.updateLayout(drawerLayout, save: false);
+    }
+    if (parallaxStatus != null) {
+      ParallaxStatus status =
+          parallaxStatus ? ParallaxStatus.falling : ParallaxStatus.off;
+      parallax.setStatus(status, save: false);
     }
   }
 

@@ -24,7 +24,7 @@ class Boxes extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               slivers: [
                 SliverGrid.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

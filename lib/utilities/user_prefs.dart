@@ -7,6 +7,7 @@ class PrefKeys{
   static String greetingText = "greetingText";
   static String quickNoteText = "quickNoteText";
   static String drawerLayout  = "drawerLayout";
+  static String parallaxStatus = "parallaxStatus";
 }
 
 late SharedPreferences userPrefs;

@@ -14,7 +14,7 @@ class Blinds extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       itemCount: allApps.length,
       itemExtent: 60,
       itemBuilder: (context, index) {

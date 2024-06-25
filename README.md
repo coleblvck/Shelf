@@ -4,7 +4,7 @@
 
 # Shelf
 
-Android Desktop re-imagined with simple gestures and productivity features.
+A simple Android App Launcher with simple gestures and productivity features; that can also be fiddled with.
 
 </div>
 
@@ -15,9 +15,7 @@ Android Desktop re-imagined with simple gestures and productivity features.
 - Gestures for easy accessibility
 
 ## Screenshots
-<div align="center">
-<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%"><img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%">&nbsp;&nbsp;&nbsp;<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%">
-</div>
+<img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="25%"><img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="25%"><img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="25%"><img alt="Shelf home screen" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="25%">
 
 ## Contributions
 - Welcome

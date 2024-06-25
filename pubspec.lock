@@ -184,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.4"
+  parallax_rain:
+    dependency: "direct main"
+    description:
+      name: parallax_rain
+      sha256: "433eb7b572147f26da212d30959332bce87e55a270f725fb2e92e599e97b47d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   path:
     dependency: transitive
     description:

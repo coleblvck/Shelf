@@ -1,1 +1,1 @@
-A simple Android App Launcher.
+A simple Android App Launcher that can be fiddled with.

@@ -16,7 +16,8 @@ class ShelfFlow extends StatelessWidget {
     return Expanded(
       flex: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 1,
       child: PageView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
+        pageSnapping: false,
         controller: shelfState.flow.controller,
         onPageChanged: (index) {
           shelfState.flow.index = index;

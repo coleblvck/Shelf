@@ -265,6 +265,23 @@ showHintDialog(context) {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 12,
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                        "- Long press on empty space for a surprise... or confetti... or perhaps, rain... whatever.",
+                        style: TextStyle(
+                            color: ShelfTheme.of(context).colors.onSecondary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

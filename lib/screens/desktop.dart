@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:parallax_rain/parallax_rain.dart';
+import 'package:shelf/state/parallax_state.dart';
+import 'package:shelf/ui/theming.dart';
 
 import '../state/state_util.dart';
 import '../ui/dashboard/dashboard.dart';
@@ -23,7 +26,7 @@ class _DesktopState extends State<Desktop> {
             shelfState.pages.controller.animateToPage(
               1,
               curve: Curves.decelerate,
-              duration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 200),
             ),
           }
         else
@@ -33,7 +36,7 @@ class _DesktopState extends State<Desktop> {
                 shelfState.flow.controller.animateToPage(
                   0,
                   curve: Curves.decelerate,
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 200),
                 ),
               }
           },
@@ -41,46 +44,80 @@ class _DesktopState extends State<Desktop> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: MediaQuery.of(context).orientation == Orientation.portrait
-                ? Column(
-                    children: [
-                      StreamBuilder<bool>(
-                        stream: shelfState.flow.visibilityStream.stream,
-                        builder: (context, snapshot) {
-                          final bool isVisible =
-                              snapshot.data ?? shelfState.flow.visible;
-                          return isVisible ? const ShelfFlow() : Container();
-                        },
-                      ),
-                      ShelfPages(),
-                      StreamBuilder<bool>(
-                        stream: shelfState.dashboard.visibilityStream.stream,
-                        builder: (context, snapshot) {
-                          final bool isVisible =
-                              snapshot.data ?? shelfState.dashboard.visible;
-                          return isVisible ? const Dashboard() : Container();
-                        },
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      ShelfPages(),
-                      StreamBuilder<bool>(
-                        stream: shelfState.dashboard.visibilityStream.stream,
-                        builder: (context, snapshot) {
-                          final bool isVisible =
-                              snapshot.data ?? shelfState.dashboard.visible;
-                          return isVisible ? const Dashboard() : Container();
-                        },
-                      ),
-                    ],
+        body: StreamBuilder<ParallaxStatus>(
+            stream: shelfState.parallax.statusStream.stream,
+            builder: (context, snapshot) {
+              ParallaxStatus status =
+                  snapshot.data ?? shelfState.parallax.status;
+              return status != ParallaxStatus.off
+                  ? ParallaxRain(
+                      dropColors: [
+                        ShelfTheme.of(context).colors.primary,
+                        ShelfTheme.of(context).colors.secondary,
+                      ],
+                      dropFallSpeed: 2,
+                      numberOfDrops: 100,
+                      dropWidth: 0.5,
+                      dropHeight: 8,
+                      trail: true,
+                      rainIsInBackground: false,
+                      trailStartFraction: 0.2,
+                      numberOfLayers: 3,
+                      distanceBetweenLayers: 2,
+                      child: const DesktopContent(),
+                    )
+                  : const DesktopContent();
+            }),
+      ),
+    );
+  }
+}
+
+class DesktopContent extends StatelessWidget {
+  const DesktopContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: MediaQuery.of(context).orientation == Orientation.portrait
+            ? Column(
+                children: [
+                  StreamBuilder<bool>(
+                    stream: shelfState.flow.visibilityStream.stream,
+                    builder: (context, snapshot) {
+                      final bool isVisible =
+                          snapshot.data ?? shelfState.flow.visible;
+                      return isVisible ? const ShelfFlow() : Container();
+                    },
                   ),
-          ),
-        ),
+                  ShelfPages(),
+                  StreamBuilder<bool>(
+                    stream: shelfState.dashboard.visibilityStream.stream,
+                    builder: (context, snapshot) {
+                      final bool isVisible =
+                          snapshot.data ?? shelfState.dashboard.visible;
+                      return isVisible ? const Dashboard() : Container();
+                    },
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  ShelfPages(),
+                  StreamBuilder<bool>(
+                    stream: shelfState.dashboard.visibilityStream.stream,
+                    builder: (context, snapshot) {
+                      final bool isVisible =
+                          snapshot.data ?? shelfState.dashboard.visible;
+                      return isVisible ? const Dashboard() : Container();
+                    },
+                  ),
+                ],
+              ),
       ),
     );
   }
