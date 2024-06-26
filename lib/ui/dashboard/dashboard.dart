@@ -4,7 +4,7 @@ import 'package:shelf/utilities/dialogs/drawer_layout.dart';
 
 import '../../channels/app_scout/app_detail.dart';
 import '../../channels/app_scout/app_scout.dart';
-import '../../global_variables.dart';
+import '../../custom_function.dart';
 import '../../state/state_util.dart';
 import '../../utilities/clock.dart';
 import '../theming.dart';
@@ -107,7 +107,7 @@ class Dashboard extends StatelessWidget {
                 stream: shelfState.pages.indexStream.stream,
                 builder: (context, snapshot) {
                   final int appDrawerIndex =
-                      snapshot.data ?? shelfState.pages.index;
+                      snapshot.data ?? shelfState.pages.currentIndex;
                   return GestureDetector(
                     onTap: () {
                       shelfState.pages.togglePages();
@@ -115,7 +115,7 @@ class Dashboard extends StatelessWidget {
                     onLongPress: () {
                       drawerLayoutDialog(context);
                     },
-                    child: appDrawerIndex != 1
+                    child: appDrawerIndex % 2 != 1
                         ? Icon(
                             RemixIcon.dashboard,
                             color: ShelfTheme.of(context).colors.onPrimary,

@@ -84,10 +84,7 @@ class ShelfTheme extends InheritedWidget {
   }
 }
 
-ShelfColorScheme? currentColorScheme;
-
-StreamController<ShelfColorScheme> colorSchemeStream =
-    StreamController.broadcast();
+late ShelfColorScheme currentColorScheme;
 
 getColorScheme() async {
   final corePalette = await DynamicColorPlugin.getCorePalette();
@@ -106,10 +103,8 @@ getColorScheme() async {
       brightness: Brightness.dark,
       colorSchemeType: ColorSchemeType.dynamic,
     );
-    colorSchemeStream.add(dynamicColorScheme);
     currentColorScheme = dynamicColorScheme;
   } else {
-    colorSchemeStream.add(defaultColors);
     currentColorScheme = defaultColors;
   }
 }

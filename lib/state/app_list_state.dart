@@ -13,7 +13,7 @@ class AppListState {
   get({bool forceUpdate = false}) async {
     List<AppDetail> apps = await AppScout.fetchApps();
     apps.sort(
-      (a, b) => a.name.compareTo(b.name),
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
     );
     apps.removeWhere((app) => app.packageName == "com.coleblvck.shelf");
     if (!forceUpdate) {

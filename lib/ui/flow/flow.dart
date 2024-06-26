@@ -1,78 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:shelf/state/flow_state.dart';
 import 'package:shelf/state/state_util.dart';
-
-import '../../utilities/dialogs/header_edit.dart';
-import '../../utilities/dialogs/hint.dart';
-import '../theming.dart';
+import 'package:shelf/utilities/dialogs/header_edit.dart';
+import 'package:shelf/utilities/dialogs/hint.dart';
+import 'package:shelf/ui/theming.dart';
 
 class ShelfFlow extends StatelessWidget {
-  const ShelfFlow({
+  ShelfFlow({
     super.key,
   });
 
+  final FlowState state = shelfState.flow;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 1,
-      child: PageView(
+      child: PageView.builder(
         physics: const ClampingScrollPhysics(),
         pageSnapping: false,
-        controller: shelfState.flow.controller,
+        controller: state.controller,
         onPageChanged: (index) {
-          shelfState.flow.index = index;
-          shelfState.flow.indexStream.add(index);
+          state.onPageChanged(index);
         },
         scrollDirection:
             MediaQuery.of(context).orientation == Orientation.portrait
                 ? Axis.horizontal
                 : Axis.vertical,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: GestureDetector(
-              onLongPress: () {
-                headerTextEditDialog(context);
-              },
-              onDoubleTap: () {
-                showHintDialog(context);
-              },
-              child: Card(
-                elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-                color: ShelfTheme.of(context)
-                    .colors
-                    .surface
-                    .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-                child: const Center(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: GreetingsWidget(),
-                          ),
-                        ),
-                      ),
-                    ],
+        itemCount: state.itemCount,
+        itemBuilder: (context, index) {
+          return state.cards[index % state.cardCount];
+        },
+      ),
+    );
+  }
+}
+
+class NoteCard extends StatelessWidget {
+  const NoteCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Card(
+        elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+        color: ShelfTheme.of(context)
+            .colors
+            .surface
+            .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+        child: const QuickNote(),
+      ),
+    );
+  }
+}
+
+class HeaderCard extends StatelessWidget {
+  const HeaderCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GestureDetector(
+        onLongPress: () {
+          headerTextEditDialog(context);
+        },
+        onDoubleTap: () {
+          showHintDialog(context);
+        },
+        child: Card(
+          elevation: ShelfTheme.of(context).uiParameters.cardElevation,
+          color: ShelfTheme.of(context)
+              .colors
+              .surface
+              .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
+          child: const Center(
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Greetings(),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Card(
-              elevation: ShelfTheme.of(context).uiParameters.cardElevation,
-              color: ShelfTheme.of(context)
-                  .colors
-                  .surface
-                  .withAlpha(ShelfTheme.of(context).uiParameters.cardAlpha),
-              child: const QuickNote(),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -111,8 +133,8 @@ class QuickNote extends StatelessWidget {
   }
 }
 
-class GreetingsWidget extends StatelessWidget {
-  const GreetingsWidget({
+class Greetings extends StatelessWidget {
+  const Greetings({
     super.key,
   });
 

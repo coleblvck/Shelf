@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/channels/app_scout/app_scout.dart';
 import 'package:shelf/state/drawer_state.dart';
 import 'package:shelf/state/flow_state.dart';
@@ -27,7 +28,10 @@ class ShelfState {
   }
 
   initShelf() async {
+    pages.init();
+    flow.init();
     await initColorScheme();
+    userPrefs = await SharedPreferences.getInstance();
     initUserPrefs();
     initApps();
   }

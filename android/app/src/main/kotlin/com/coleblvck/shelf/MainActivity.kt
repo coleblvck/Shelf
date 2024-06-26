@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -93,7 +94,7 @@ class MainActivity : FlutterActivity() {
 
     companion object {
 
-        lateinit  var appContext: Context
+        lateinit var appContext: Context
 
     }
 
@@ -102,11 +103,11 @@ class MainActivity : FlutterActivity() {
         private var appsChangeListener: DeviceAppsChangedListener? = null
         override fun onListen(arguments: Any?, events: EventSink?) {
 
-                if (appsChangeListener == null) {
-                    appsChangeListener = DeviceAppsChangedListener(this)
-                }
+            if (appsChangeListener == null) {
+                appsChangeListener = DeviceAppsChangedListener(this)
+            }
 
-                appsChangeListener!!.register(appContext, events!!)
+            appsChangeListener!!.register(appContext, events!!)
 
         }
 
@@ -153,12 +154,18 @@ class MainActivity : FlutterActivity() {
 
     private fun fetchApps(): List<Map<String, Any?>> {
         val packageManager = context.packageManager
-        val allAppsList = packageManager.queryIntentActivities(
-            Intent(
-                Intent.ACTION_MAIN,
-                null
-            ).addCategory(Intent.CATEGORY_LAUNCHER), 0
-        )
+        val mainIntent = Intent(Intent.ACTION_MAIN, null)
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        val allAppsList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.queryIntentActivities(
+                mainIntent,
+                PackageManager.ResolveInfoFlags.of(0L)
+            )
+        } else {
+            packageManager.queryIntentActivities(
+               mainIntent, 0
+            )
+        }
         val listToReturn = emptyList<Map<String, Any?>>().toMutableList()
         for (appInfo in allAppsList) {
             if (appInfo.activityInfo.packageName != context.packageName) {

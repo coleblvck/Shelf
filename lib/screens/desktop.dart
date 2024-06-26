@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parallax_rain/parallax_rain.dart';
+import 'package:shelf/state/flow_state.dart';
+import 'package:shelf/state/pages_state.dart';
 import 'package:shelf/state/parallax_state.dart';
 import 'package:shelf/ui/theming.dart';
 
@@ -20,26 +22,29 @@ class _DesktopState extends State<Desktop> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) => {
-        if (shelfState.pages.index != 1)
-          {
-            shelfState.pages.controller.animateToPage(
-              1,
+      onPopInvoked: (didPop) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        final PagesState pages = shelfState.pages;
+        if (pages.currentIndex % pages.pageCount != 1) {
+          pages.controller.animateToPage(
+            pages.currentIndex <= (pages.itemCount - 1) / 2
+                ? pages.currentIndex + 1
+                : pages.currentIndex - 1,
+            curve: Curves.decelerate,
+            duration: const Duration(milliseconds: 200),
+          );
+        } else {
+          final FlowState flow = shelfState.flow;
+          if (flow.currentIndex % flow.cardCount != 0) {
+            shelfState.flow.controller.animateToPage(
+              flow.currentIndex <= (flow.itemCount - 1) / 2
+                  ? flow.currentIndex + 1
+                  : flow.currentIndex - 1,
               curve: Curves.decelerate,
               duration: const Duration(milliseconds: 200),
-            ),
+            );
           }
-        else
-          {
-            if (shelfState.flow.index != 0)
-              {
-                shelfState.flow.controller.animateToPage(
-                  0,
-                  curve: Curves.decelerate,
-                  duration: const Duration(milliseconds: 200),
-                ),
-              }
-          },
+        }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -91,10 +96,10 @@ class DesktopContent extends StatelessWidget {
                     builder: (context, snapshot) {
                       final bool isVisible =
                           snapshot.data ?? shelfState.flow.visible;
-                      return isVisible ? const ShelfFlow() : Container();
+                      return isVisible ? ShelfFlow() : Container();
                     },
                   ),
-                  ShelfPages(),
+                  const ShelfPages(),
                   StreamBuilder<bool>(
                     stream: shelfState.dashboard.visibilityStream.stream,
                     builder: (context, snapshot) {
@@ -107,7 +112,7 @@ class DesktopContent extends StatelessWidget {
               )
             : Column(
                 children: [
-                  ShelfPages(),
+                  const ShelfPages(),
                   StreamBuilder<bool>(
                     stream: shelfState.dashboard.visibilityStream.stream,
                     builder: (context, snapshot) {

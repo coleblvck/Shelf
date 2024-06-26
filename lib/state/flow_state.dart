@@ -1,23 +1,41 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shelf/utilities/user_prefs.dart';
+import 'package:shelf/ui/flow/flow.dart';
 
 class FlowState {
-  PageController controller = PageController(initialPage: 0);
-
-  int index = 0;
-
+  int initialPage = 4;
+  int itemCount = 9;
+  late int cardCount;
+  late int currentIndex;
+  late PageController controller;
   StreamController<int> indexStream = StreamController.broadcast();
+  List<Widget> cards = const [
+    HeaderCard(),
+    NoteCard(),
+  ];
+
+  init() {
+    currentIndex = initialPage;
+    controller = PageController(initialPage: initialPage);
+    cardCount = cards.length;
+  }
+
+  onPageChanged(int index) {
+    currentIndex = index;
+    indexStream.add(index);
+  }
 
   goToQuickNote() async {
     if (!visible) {
-      toggleVisibility();
-      await Future.delayed(const Duration(milliseconds: 100));
+      await toggleVisibility();
+      //await Future.delayed(const Duration(milliseconds: 100));
     }
-    controller.page != 1
+    currentIndex % cardCount != 1
         ? controller.animateToPage(
-            1,
+            currentIndex <= (itemCount - 1) / 2
+                ? currentIndex + 1
+                : currentIndex - 1,
             curve: Curves.linear,
             duration: const Duration(milliseconds: 200),
           )
@@ -52,6 +70,8 @@ class FlowState {
   updateVisibility(bool isVisible, {bool save = true}) async {
     visible = isVisible;
     visibilityStream.add(isVisible);
+    controller.dispose();
+    controller = PageController(initialPage: currentIndex);
     if (save) {
       await _save(isVisible);
     }
@@ -61,7 +81,7 @@ class FlowState {
     await userPrefs.setBool(PrefKeys.flowVisible, isVisible);
   }
 
-  toggleVisibility() {
-    updateVisibility(!visible);
+  toggleVisibility() async {
+    await updateVisibility(!visible);
   }
 }
