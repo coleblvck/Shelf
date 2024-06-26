@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/channels/app_scout/app_scout.dart';
+import 'package:shelf/custom_functions.dart';
 import 'package:shelf/state/drawer_state.dart';
 import 'package:shelf/state/flow_state.dart';
 import 'package:shelf/state/pages_state.dart';
@@ -7,10 +8,8 @@ import 'package:shelf/state/parallax_state.dart';
 import 'package:shelf/state/search_state.dart';
 import 'package:shelf/state/system_ui_mode_state.dart';
 import 'package:shelf/utilities/user_prefs.dart';
-
-import '../ui/theming.dart';
-import 'app_list_state.dart';
-import 'dashboard_state.dart';
+import 'package:shelf/state/app_list_state.dart';
+import 'package:shelf/state/dashboard_state.dart';
 
 class ShelfState {
   AppListState apps = AppListState();
@@ -21,6 +20,7 @@ class ShelfState {
   SearchState search = SearchState();
   FlowState flow = FlowState();
   ParallaxState parallax = ParallaxState();
+  CustomFunctions functions = CustomFunctions();
 
   refreshShelf({bool forceUpdate = false}) async {
     //await refreshColorScheme();
@@ -30,7 +30,6 @@ class ShelfState {
   initShelf() async {
     pages.init();
     flow.init();
-    await initColorScheme();
     userPrefs = await SharedPreferences.getInstance();
     initUserPrefs();
     initApps();
@@ -44,6 +43,15 @@ class ShelfState {
     final String? quickNoteText = userPrefs.getString(PrefKeys.quickNoteText);
     final String? drawerLayout = userPrefs.getString(PrefKeys.drawerLayout);
     final bool? parallaxStatus = userPrefs.getBool(PrefKeys.parallaxStatus);
+    final String? customWidget = userPrefs.getString(PrefKeys.customWidget);
+    final String? customPackage = userPrefs.getString(PrefKeys.customPackage);
+    final String? customBehaviour = userPrefs.getString(PrefKeys.customBehaviour);
+    functions.updateCustomBehavior(
+        widget: customWidget ?? "",
+        package: customPackage ?? "",
+        behaviour: customBehaviour ?? "",
+        save: false,
+    );
     if (flowVisible != null) {
       flow.updateVisibility(flowVisible, save: false);
     }

@@ -6,6 +6,7 @@ import 'package:shelf/ui/theming.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initColorScheme();
   shelfState = ShelfState();
   await shelfState.initShelf();
   runApp(

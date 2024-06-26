@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:remix_icon_icons/remix_icon_icons.dart';
-
-import '../../state/drawer_state.dart';
-import '../../state/state_util.dart';
-import '../../ui/theming.dart';
+import 'package:shelf/state/drawer_state.dart';
+import 'package:shelf/state/state_util.dart';
+import 'package:shelf/ui/theming.dart';
 
 drawerLayoutDialog(context) {
   return showDialog(
